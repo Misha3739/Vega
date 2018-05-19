@@ -23,7 +23,8 @@ namespace vega.Migrations {
         }
 
         protected override void Down(MigrationBuilder migrationBuilder) {
-
+                migrationBuilder.Sql("DELETE FROM Models");
+                migrationBuilder.Sql("DELETE FROM Makes");
         }
     }
 }

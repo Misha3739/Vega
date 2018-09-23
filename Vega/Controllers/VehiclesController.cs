@@ -12,9 +12,9 @@ using Microsoft.EntityFrameworkCore;
 namespace vega.Controllers {
     [Route("/api/vehicles")]
     public class VehiclesController : Controller {
-         private readonly VegaDbContext _context;
+         private readonly IVegaDbContext _context;
          private readonly IMapper _mapper;
-         public VehiclesController(VegaDbContext context, IMapper mapper) {
+         public VehiclesController(IVegaDbContext context, IMapper mapper) {
             this._mapper = mapper;
             this._context = context;
         }

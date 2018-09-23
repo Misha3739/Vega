@@ -9,9 +9,9 @@ using vega.Persistence;
 
 namespace vega.Controllers {
     public class MakesController : Controller {
-        private readonly VegaDbContext _context;
+        private readonly IVegaDbContext _context;
         private readonly IMapper mapper;
-        public MakesController(VegaDbContext context, IMapper mapper) {
+        public MakesController(IVegaDbContext context, IMapper mapper) {
             this.mapper = mapper;
             this._context = context;
 

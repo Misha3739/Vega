@@ -9,9 +9,9 @@ using vega.Persistence;
 
 namespace vega.Controllers {
     public class FeaturesController {
-         private readonly VegaDbContext _context;
+         private readonly IVegaDbContext _context;
          private readonly IMapper mapper;
-         public FeaturesController(VegaDbContext context, IMapper mapper) {
+         public FeaturesController(IVegaDbContext context, IMapper mapper) {
             this.mapper = mapper;
             this._context = context;
 

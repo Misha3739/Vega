@@ -5,7 +5,7 @@ namespace TestsLauncher {
     class Program {
         static void Main(string[] args) {
             var tests = new VehiclesControllerTests();
-            tests.CanValidateModelFields_NullContact(null);
+            tests.CanValidateModelFields_RequiredFielsAreMissing(null);
         }
     }
 }

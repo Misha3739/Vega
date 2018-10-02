@@ -21,6 +21,7 @@ namespace Vega.Tests.Controllers {
 		private readonly IMapper _mapper;
 		private readonly Mock<IVegaDbContext> _dbContext;
 		private VehiclesController _controller;
+		private Mock<DbSet<Vehicle>> _vehiclesDbSetMock;
 
 		public VehiclesControllerTests() {
 			_dbContext = new Mock<IVegaDbContext>();
@@ -40,7 +41,7 @@ namespace Vega.Tests.Controllers {
 					Name = "Audi Q7"
 				}
 			};
-			_dbContext.Setup(c => c.Models).Returns(GetQueryableMockDbSet(models));
+			_dbContext.Setup(c => c.Models).Returns(GetQueryableMockDbSet(models).Object);
 
 			List<Feature> features = new List<Feature> {
 				new Feature {
@@ -60,7 +61,7 @@ namespace Vega.Tests.Controllers {
 					Name = "Feature 8"
 				}
 			};
-			_dbContext.Setup(c => c.Features).Returns(GetQueryableMockDbSet(features));
+			_dbContext.Setup(c => c.Features).Returns(GetQueryableMockDbSet(features).Object);
 
 			var vehicles = new List<Vehicle> {
 				new Vehicle {
@@ -77,7 +78,8 @@ namespace Vega.Tests.Controllers {
 					}
 				}
 			};
-			_dbContext.Setup(c => c.Vehicles).Returns(GetQueryableMockDbSet(vehicles));
+			_vehiclesDbSetMock = GetQueryableMockDbSet(vehicles);
+			_dbContext.Setup(c => c.Vehicles).Returns(_vehiclesDbSetMock.Object);
 			_controller = new VehiclesController(_dbContext.Object, _mapper);
 		}
 
@@ -211,7 +213,6 @@ namespace Vega.Tests.Controllers {
 			Assert.IsNotNull(errorList);
 			Assert.AreEqual(1, errorList.Count);
 			CollectionAssert.AreEqual(new[] { "Vehicle with Id = 122 not found!" }, errorList["Id"] as string[]);
-	
 		}
 
 		[Test]
@@ -241,6 +242,10 @@ namespace Vega.Tests.Controllers {
 			CollectionAssert.AreEqual(new List<int> { 5, 6 }, returnResult.Features);
 			Assert.IsTrue(returnResult.IsRegistered);
 			Assert.AreEqual(2, returnResult.ModelId);
+
+			_vehiclesDbSetMock.Verify(mock => mock.Add(It.IsAny<Vehicle>()), Times.Once);
+			_vehiclesDbSetMock.Verify(mock => mock.Add(
+				It.Is<Vehicle>(v => v.ModelId == 2 && v.ContactName == "Person")), Times.Once);
 		}
 
 		[Test]
@@ -254,7 +259,7 @@ namespace Vega.Tests.Controllers {
 				LastUpdate = new DateTime(2018, 1, 10, 15, 20, 33),
 				IsRegistered = true,
 				ModelId = 3,
-				Features = new List<int> { 5, 6 , 8 }
+				Features = new List<int> { 5, 6, 8 }
 			};
 
 			var actual = await _controller.UpdateVehicle(123, vehicleResource);
@@ -268,7 +273,7 @@ namespace Vega.Tests.Controllers {
 			Assert.AreEqual("Person@mail.com", returnResult.Contact.Email);
 			Assert.AreEqual("2222222", returnResult.Contact.Phone);
 			Assert.AreNotEqual(new DateTime(2018, 1, 10, 15, 20, 33), returnResult.LastUpdate);
-			CollectionAssert.AreEqual(new List<int> { 5, 6 , 8 }, returnResult.Features);
+			CollectionAssert.AreEqual(new List<int> { 5, 6, 8 }, returnResult.Features);
 			Assert.IsTrue(returnResult.IsRegistered);
 			Assert.AreEqual(3, returnResult.ModelId);
 		}
@@ -278,14 +283,15 @@ namespace Vega.Tests.Controllers {
 			var actual = await _controller.DeleteVehicle(123);
 
 			Assert.IsInstanceOf<OkObjectResult>(actual);
-			Assert.AreEqual(123 , (int)((OkObjectResult) actual).Value);
+			Assert.AreEqual(123, (int) ((OkObjectResult) actual).Value);
 			_dbContext.Verify(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+			_vehiclesDbSetMock.Verify(mock => mock.Remove(It.IsAny<Vehicle>()), Times.Once);
+			_vehiclesDbSetMock.Verify(mock => mock.Remove(It.Is<Vehicle>(v => v.Id == 123)), Times.Once);
 		}
 
-
-		private static DbSet<T> GetQueryableMockDbSet<T>(List<T> sourceList) where T : class {
+		private static Mock<DbSet<T>> GetQueryableMockDbSet<T>(List<T> sourceList) where T : class {
 			var queryable = sourceList.AsQueryable();
-			return queryable.BuildMockDbSet().Object;
+			return queryable.BuildMockDbSet();
 		}
 	}
 }

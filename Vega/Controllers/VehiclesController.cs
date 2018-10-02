@@ -81,6 +81,7 @@ namespace vega.Controllers {
 			}
 
 			try {
+				// ReSharper disable once AssignNullToNotNullAttribute
 				_context.Vehicles.Remove(domainVehicle);
 				await _context.SaveChangesAsync();
 				return Ok(id);

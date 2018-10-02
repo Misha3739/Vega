@@ -62,6 +62,7 @@ namespace vega.Controllers {
 				domainVehicle.LastUpdate = DateTime.Now;
 				await _context.SaveChangesAsync();
 				VehicleResource result = _mapper.Map<Vehicle, VehicleResource>(domainVehicle);
+				result.Id = id;
 				return Ok(result);
 			} catch (Exception e) {
 				return StatusCode(500, e.InnerException?.Message ?? e.Message);

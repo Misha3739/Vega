@@ -62,15 +62,15 @@ namespace Vega.Tests.Controllers {
 			};
 			_dbContext.Setup(c => c.Features).Returns(GetQueryableMockDbSet(features));
 
-			var vehicles = new List<Vehicle>() {
-				new Vehicle() {
+			var vehicles = new List<Vehicle> {
+				new Vehicle {
 					Id = 123,
 					ModelId = 2,
 					ContactEmail = "Name@mail.com",
 					ContactName = "Name",
 					ContactPhone = "3333333",
-					Features = new List<VehicleFeature>() {
-						new VehicleFeature() {
+					Features = new List<VehicleFeature> {
+						new VehicleFeature {
 							FeatureId = 5,
 							VehicleId = 23
 						}
@@ -199,6 +199,65 @@ namespace Vega.Tests.Controllers {
 			Assert.IsNotNull(errorList);
 			Assert.AreEqual(1, errorList.Count);
 			CollectionAssert.AreEqual(new[] { "Vehicle with Id = 122 not found!" }, errorList["Id"] as string[]);
+		}
+
+		[Test]
+		public async Task CanCreateNewVehicle() {
+			var vehicleResource = new VehicleResource {
+				Contact = new ContacResource {
+					Name = "Person",
+					Email = "Person@mail.com",
+					Phone = "2222222"
+				},
+				LastUpdate = new DateTime(2018, 1, 10, 15, 20, 33),
+				IsRegistered = true,
+				ModelId = 2,
+				Features = new List<int> { 5, 6 }
+			};
+
+			var actual = await _controller.CreateVehicle(vehicleResource);
+
+			Assert.IsInstanceOf<OkObjectResult>(actual);
+			var returnResult = ((OkObjectResult) actual).Value as VehicleResource;
+			Assert.IsNotNull(returnResult);
+			_dbContext.Verify(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+			Assert.AreEqual("Person", returnResult.Contact.Name);
+			Assert.AreEqual("Person@mail.com", returnResult.Contact.Email);
+			Assert.AreEqual("2222222", returnResult.Contact.Phone);
+			Assert.AreNotEqual(new DateTime(2018, 1, 10, 15, 20, 33), returnResult.LastUpdate);
+			CollectionAssert.AreEqual(new List<int> { 5, 6 }, returnResult.Features);
+			Assert.IsTrue(returnResult.IsRegistered);
+			Assert.AreEqual(2, returnResult.ModelId);
+		}
+
+		[Test]
+		public async Task CanUpdateVehicle() {
+			var vehicleResource = new VehicleResource {
+				Contact = new ContacResource {
+					Name = "Person",
+					Email = "Person@mail.com",
+					Phone = "2222222"
+				},
+				LastUpdate = new DateTime(2018, 1, 10, 15, 20, 33),
+				IsRegistered = true,
+				ModelId = 3,
+				Features = new List<int> { 5, 6 , 8 }
+			};
+
+			var actual = await _controller.UpdateVehicle(123, vehicleResource);
+
+			Assert.IsInstanceOf<OkObjectResult>(actual);
+			var returnResult = ((OkObjectResult) actual).Value as VehicleResource;
+			Assert.IsNotNull(returnResult);
+			_dbContext.Verify(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+			Assert.AreEqual(123, returnResult.Id);
+			Assert.AreEqual("Person", returnResult.Contact.Name);
+			Assert.AreEqual("Person@mail.com", returnResult.Contact.Email);
+			Assert.AreEqual("2222222", returnResult.Contact.Phone);
+			Assert.AreNotEqual(new DateTime(2018, 1, 10, 15, 20, 33), returnResult.LastUpdate);
+			CollectionAssert.AreEqual(new List<int> { 5, 6 , 8 }, returnResult.Features);
+			Assert.IsTrue(returnResult.IsRegistered);
+			Assert.AreEqual(3, returnResult.ModelId);
 		}
 
 		private static DbSet<T> GetQueryableMockDbSet<T>(List<T> sourceList) where T : class {

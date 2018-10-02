@@ -91,6 +91,16 @@ namespace vega.Controllers {
 
 		}
 
+		[HttpGet("{id}")]
+		public async Task<IActionResult> GetVehicle(int id) {
+			var domainVehicle = await _context.Vehicles.SingleOrDefaultAsync(v => v.Id == id);
+			if (domainVehicle == null) {
+				return NotFound(id);
+			}	
+			VehicleResource result = _mapper.Map<VehicleResource>(domainVehicle);
+			return Ok(result);
+		}
+
 		private async Task<bool> ValidateVehicle(VehicleResource vehicle) {
 			Model model = await _context.Models.FirstOrDefaultAsync(m => m.Id == vehicle.ModelId);
 			if (model == null) {

@@ -216,6 +216,14 @@ namespace Vega.Tests.Controllers {
 		}
 
 		[Test]
+		public async Task GetVehicle_CanValidateInput() {
+			var actual = await _controller.GetVehicle(122);
+
+			Assert.IsInstanceOf<NotFoundObjectResult>(actual);
+			Assert.AreEqual(122, (int)((NotFoundObjectResult) actual).Value);
+		}
+
+		[Test]
 		public async Task CanCreateNewVehicle() {
 			var vehicleResource = new VehicleResource {
 				Contact = new ContacResource {
@@ -287,6 +295,16 @@ namespace Vega.Tests.Controllers {
 			_dbContext.Verify(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
 			_vehiclesDbSetMock.Verify(mock => mock.Remove(It.IsAny<Vehicle>()), Times.Once);
 			_vehiclesDbSetMock.Verify(mock => mock.Remove(It.Is<Vehicle>(v => v.Id == 123)), Times.Once);
+		}
+
+		[Test]
+		public async Task GetGetVehicle() {
+			var actual = await _controller.GetVehicle(123);
+
+			Assert.IsInstanceOf<VehicleResource>(((OkObjectResult)actual).Value);
+			var result = ((OkObjectResult) actual).Value as VehicleResource;
+			Assert.AreEqual(123, result.Id);
+			Assert.AreEqual("Name@mail.com", result.Contact.Email);
 		}
 
 		private static Mock<DbSet<T>> GetQueryableMockDbSet<T>(List<T> sourceList) where T : class {

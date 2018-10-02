@@ -202,6 +202,19 @@ namespace Vega.Tests.Controllers {
 		}
 
 		[Test]
+		public async Task DeleteVehicle_CanValidateInput() {
+			var actual = await _controller.DeleteVehicle(122);
+
+			Assert.IsInstanceOf<BadRequestObjectResult>(actual);
+			BadRequestObjectResult result = actual as BadRequestObjectResult;
+			SerializableError errorList = result?.Value as SerializableError;
+			Assert.IsNotNull(errorList);
+			Assert.AreEqual(1, errorList.Count);
+			CollectionAssert.AreEqual(new[] { "Vehicle with Id = 122 not found!" }, errorList["Id"] as string[]);
+	
+		}
+
+		[Test]
 		public async Task CanCreateNewVehicle() {
 			var vehicleResource = new VehicleResource {
 				Contact = new ContacResource {
@@ -259,6 +272,16 @@ namespace Vega.Tests.Controllers {
 			Assert.IsTrue(returnResult.IsRegistered);
 			Assert.AreEqual(3, returnResult.ModelId);
 		}
+
+		[Test]
+		public async Task CanDeleteVehicle() {
+			var actual = await _controller.DeleteVehicle(123);
+
+			Assert.IsInstanceOf<OkObjectResult>(actual);
+			Assert.AreEqual(123 , (int)((OkObjectResult) actual).Value);
+			_dbContext.Verify(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+		}
+
 
 		private static DbSet<T> GetQueryableMockDbSet<T>(List<T> sourceList) where T : class {
 			var queryable = sourceList.AsQueryable();

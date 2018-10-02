@@ -69,6 +69,27 @@ namespace vega.Controllers {
 			}
 		}
 
+		[HttpDelete]
+		public async Task<IActionResult> DeleteVehicle(int id) {
+			var domainVehicle = await _context.Vehicles.SingleOrDefaultAsync(v => v.Id == id);
+			if (domainVehicle == null) {
+				ModelState.AddModelError("Id", $"Vehicle with Id = {id} not found!");
+			}
+
+			if (ModelState.ErrorCount > 0) {
+				return BadRequest(ModelState);
+			}
+
+			try {
+				_context.Vehicles.Remove(domainVehicle);
+				await _context.SaveChangesAsync();
+				return Ok(id);
+			} catch (Exception e) {
+				return StatusCode(500, e.InnerException?.Message ?? e.Message);
+			}
+
+		}
+
 		private async Task<bool> ValidateVehicle(VehicleResource vehicle) {
 			Model model = await _context.Models.FirstOrDefaultAsync(m => m.Id == vehicle.ModelId);
 			if (model == null) {

@@ -304,7 +304,9 @@ namespace Vega.Tests.Controllers {
 			Assert.IsInstanceOf<VehicleResource>(((OkObjectResult)actual).Value);
 			var result = ((OkObjectResult) actual).Value as VehicleResource;
 			Assert.AreEqual(123, result.Id);
+			Assert.AreEqual(2, result.ModelId);
 			Assert.AreEqual("Name@mail.com", result.Contact.Email);
+			Assert.AreEqual(new List<int> { 5 }, result.Features);
 		}
 
 		private static Mock<DbSet<T>> GetQueryableMockDbSet<T>(List<T> sourceList) where T : class {

@@ -69,7 +69,7 @@ namespace vega.Controllers {
 			}
 		}
 
-		[HttpDelete]
+		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteVehicle(int id) {
 			var domainVehicle = await _context.Vehicles.SingleOrDefaultAsync(v => v.Id == id);
 			if (domainVehicle == null) {
@@ -93,7 +93,7 @@ namespace vega.Controllers {
 
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetVehicle(int id) {
-			var domainVehicle = await _context.Vehicles.SingleOrDefaultAsync(v => v.Id == id);
+			var domainVehicle = await _context.Vehicles.Include(v => v.Features).SingleOrDefaultAsync(v => v.Id == id);
 			if (domainVehicle == null) {
 				return NotFound(id);
 			}	

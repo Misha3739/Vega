@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2017
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vega.Tests", "Vega.Tests\Vega.Tests.csproj", "{25F92681-077C-46EE-860B-22523E2744C8}"
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vega.Tests", "Vega.Tests\Vega.Tests.csproj", "{25F92681-077C-46EE-860B-22523E2744C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vega", "Vega\vega.csproj", "{39DA09B6-701E-49DE-B049-41DFFF6F5CF6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestsLauncher", "TestsLauncher\TestsLauncher.csproj", "{9938A2AE-5DFA-4295-BF14-B753EB1E0900}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vega", "Vega\vega.csproj", "{39DA09B6-701E-49DE-B049-41DFFF6F5CF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +21,11 @@ Global
 		{39DA09B6-701E-49DE-B049-41DFFF6F5CF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39DA09B6-701E-49DE-B049-41DFFF6F5CF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39DA09B6-701E-49DE-B049-41DFFF6F5CF6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9938A2AE-5DFA-4295-BF14-B753EB1E0900}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9938A2AE-5DFA-4295-BF14-B753EB1E0900}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9938A2AE-5DFA-4295-BF14-B753EB1E0900}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9938A2AE-5DFA-4295-BF14-B753EB1E0900}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {53404E6F-1740-484A-B780-28E4459D8F20}
 	EndGlobalSection
 EndGlobal

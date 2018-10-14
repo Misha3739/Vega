@@ -22,17 +22,25 @@ namespace Vega.Tests {
 			Vehicle vehicle = new Vehicle {
 				Id = 123,
 				ModelId = 2,
+				Model = new Model {
+					Id = 2,
+					Name = "Audi Q5",
+					Make = new Make {
+						Id = 1,
+						Name = "Audi"
+					}
+				},
 				ContactEmail = "Name@mail.com",
 				ContactName = "Name",
 				ContactPhone = "3333333",
 				Features = new List<VehicleFeature> {
 					new VehicleFeature {
 						FeatureId = 5,
-						VehicleId = 23
-					},
-					new VehicleFeature {
-						FeatureId = 6,
-						VehicleId = 22
+						Feature = new Feature {
+							Id = 5,
+							Name = "Feature 5"
+						},
+						VehicleId = 123
 					}
 				},
 				LastUpdate = new DateTime(1991, 1, 2)
@@ -41,20 +49,28 @@ namespace Vega.Tests {
 			VehicleResource actual = _mapper.Map<Vehicle, VehicleResource>(vehicle);
 
 			Assert.IsNotNull(actual);
-			Assert.AreEqual(123, actual.Id);
-			Assert.AreEqual(2, actual.ModelId);
+			Assert.IsNotNull(actual.Model);
+			Assert.IsNotNull(actual.Make);
 			Assert.IsNotNull(actual.Contact);
+			Assert.IsNotNull(actual.Features);
+
+			Assert.AreEqual(123, actual.Id);
+			Assert.AreEqual(2, actual.Model.Id);
+			Assert.AreEqual("Audi Q5", actual.Model.Name);
+			Assert.AreEqual(1, actual.Make.Id);
+			Assert.AreEqual("Audi", actual.Make.Name);
 			Assert.AreEqual("Name@mail.com", actual.Contact.Email);
 			Assert.AreEqual("Name", actual.Contact.Name);
 			Assert.AreEqual("3333333", actual.Contact.Phone);
-			Assert.IsNotNull(actual.Features);
-			CollectionAssert.AreEqual(new List<int> { 5, 6 }, actual.Features);
-			Assert.AreEqual(actual.LastUpdate, new DateTime(1991, 1, 2));
+			Assert.AreEqual(1, actual.Features.Count);
+			Assert.AreEqual(5, actual.Features.First().Id);
+			Assert.AreEqual("Feature 5", actual.Features.First().Name);
+			Assert.AreEqual(new DateTime(1991, 1, 2), actual.LastUpdate);
 		}
 
 		[Test]
-		public void CanMapVehicleResourceToVehicle() {
-			VehicleResource vehicleResource = new VehicleResource {
+		public void CanMapSaveVehicleResourceToVehicle() {
+			SaveVehicleResource saveVehicleResource = new SaveVehicleResource {
 				Id = 123,
 				ModelId = 2,
 				Contact = new ContacResource {
@@ -66,7 +82,7 @@ namespace Vega.Tests {
 				LastUpdate = new DateTime(1991, 1, 2)
 			};
 
-			Vehicle actual = _mapper.Map<Vehicle>(vehicleResource);
+			Vehicle actual = _mapper.Map<Vehicle>(saveVehicleResource);
 
 			Assert.IsNotNull(actual);
 			Assert.AreEqual(0, actual.Id);
@@ -80,8 +96,8 @@ namespace Vega.Tests {
 		}
 
 		[Test]
-		public void CanMapVehicleResourceToExistingVehicle() {
-			VehicleResource vehicleResource = new VehicleResource {
+		public void CanMapSaveVehicleResourceToExistingVehicle() {
+			SaveVehicleResource saveVehicleResource = new SaveVehicleResource {
 				Id = 125,
 				ModelId = 2,
 				Contact = new ContacResource {
@@ -110,18 +126,61 @@ namespace Vega.Tests {
 				LastUpdate = new DateTime(1991, 1, 2)
 			};
 
-			Vehicle actual = _mapper.Map(vehicleResource, vehicle);
+			Vehicle actual = _mapper.Map(saveVehicleResource, vehicle);
 
 			Assert.IsNotNull(actual);
-			Assert.AreEqual(123, actual.Id);  //We use Id of existing vehicle
+			Assert.AreEqual(123, actual.Id); //We use Id of existing saveVehicle
 			Assert.AreEqual(2, actual.ModelId); //But all following properties being assigned from VehiceResource
 			Assert.AreEqual("Name1@mail.com", actual.ContactEmail);
 			Assert.AreEqual("Name1", actual.ContactName);
 			Assert.AreEqual("4444444", actual.ContactPhone);
 			Assert.IsNotNull(actual.Features);
 			//Should be 5,7,9 in features
-			Assert.AreEqual(new List<int> {5,7,9}, actual.Features.Select(f => f.FeatureId));
+			Assert.AreEqual(new List<int> { 5, 7, 9 }, actual.Features.Select(f => f.FeatureId));
 			Assert.AreEqual(actual.LastUpdate, new DateTime(1991, 1, 2));
+		}
+
+		[Test]
+		public void CanMapFeatureToKeyValuePairResource() {
+			var feature = new Feature() {
+				Id = 1,
+				Name = "Wheels 17",
+			};
+
+			var actual = _mapper.Map<Feature, KeyValuePairResource>(feature);
+
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(1, actual.Id);
+			Assert.AreEqual("Wheels 17", actual.Name);
+		}
+
+		[Test]
+		public void CanMapMakeToMakeResource() {
+			var make = new Make() {
+				Id = 1,
+				Name = "Audi",
+				Models = new List<Model> {
+					new Model {
+						Id = 1,
+						Name = "Q5"
+					},
+					new Model {
+						Id = 2,
+						Name = "Q7"
+					}
+				}
+			};
+
+			var actual = _mapper.Map<Make, MakeResource>(make);
+
+			Assert.IsNotNull(actual);
+			Assert.AreEqual(1, actual.Id);
+			Assert.AreEqual("Audi", actual.Name);
+
+			Assert.IsNotNull(actual.Models);
+			Assert.AreEqual(2, actual.Models.Count);
+			CollectionAssert.AreEqual(new[] { 1, 2 }, actual.Models.Select(m => m.Id));
+			CollectionAssert.AreEqual(new[] { "Q5", "Q7" }, actual.Models.Select(m => m.Name));
 		}
 	}
 }

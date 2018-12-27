@@ -239,3 +239,14 @@ _Pvt_Extensions
 # FAKE - F# Make
 .fake/
 *.code-workspace
+
+#Windows
+#Node Modules
+node_modules/
+
+#Build
+ClientApp/dist
+wwwroot/dist
+
+#Settings
+appsettings.json

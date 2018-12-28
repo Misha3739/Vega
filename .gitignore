@@ -245,8 +245,9 @@ _Pvt_Extensions
 node_modules/
 
 #Build
-ClientApp/dist
-wwwroot/dist
+**/ClientApp/dist/
+**/wwwroot/dist/
 
 #Settings
 appsettings.json
+package-lock.json

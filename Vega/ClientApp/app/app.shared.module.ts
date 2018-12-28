@@ -13,6 +13,8 @@ import { VehicleFormComponent } from './components/vehicle-form/vehicle-form.com
 import { VehicleService } from './services/vehicle.service';
 import { EditMakesComponent } from './components/makes/edit-makes/edit-makes.component'
 import { EditModelsComponent }  from './components/models/edit-models/edit-models.component';
+import {EditableTableComponent} from "./components/common/editable-table/editable-table.component";
+import {AnyService} from "./services/any.service";
 
 @NgModule({
     declarations: [
@@ -23,7 +25,8 @@ import { EditModelsComponent }  from './components/models/edit-models/edit-model
         HomeComponent,
 		VehicleFormComponent,
 		EditMakesComponent,
-		EditModelsComponent
+		EditModelsComponent,
+        EditableTableComponent
     ],
     imports: [
         CommonModule,
@@ -41,7 +44,8 @@ import { EditModelsComponent }  from './components/models/edit-models/edit-model
         ])
     ],
     providers : [
-        VehicleService
+        VehicleService,
+        AnyService
     ]
 })
 export class AppModuleShared {

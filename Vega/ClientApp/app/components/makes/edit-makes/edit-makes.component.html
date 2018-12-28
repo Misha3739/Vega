@@ -1,3 +1,7 @@
-<p>
-  edit-makes works!
-</p>
+<h3> Makes </h3>
+<app-editable-table
+        [fetchUrl]="['api/makes']"
+        [newUrl]="['api/makes/new']"
+        [editUrlPattern]="['api/makes/edit/']"
+        [deleteUrlPattern]="['api/makes/delete/']"
+        [columns]="[{name:'name', displayName:'Name'}]"></app-editable-table>

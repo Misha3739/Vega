@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Injectable, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-edit-makes',
@@ -6,8 +6,6 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./edit-makes.component.css']
 })
 export class EditMakesComponent implements OnInit {
-
-  constructor() { }
 
   ngOnInit() {
   }

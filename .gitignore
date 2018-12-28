@@ -251,3 +251,6 @@ node_modules/
 #Settings
 appsettings.json
 package-lock.json
+
+#Idea
+**/.idea

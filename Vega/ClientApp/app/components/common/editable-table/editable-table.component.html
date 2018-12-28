@@ -1,0 +1,23 @@
+<table class="table table-bordered table-stripped table-responsive-md text-center">
+    <tr>
+        <th *ngFor="let column of columns" class="text-center">
+           {{column.displayName}}
+        </th>
+        <th class="text-center">Edit</th>
+        <th class="text-center">Delete</th>
+    </tr>
+    <tr *ngFor="let item of displayData">
+        <td *ngFor="let prop of getProperties(item)">
+            <div *ngIf="prop == 'editLink'">
+                <a href="{{item[prop]}}"><button>Edit</button></a>
+            </div>
+            <div *ngIf="prop == 'deleteLink'">
+                <a href="{{item[prop]}}"><button (click)="deleteClick(item['id'])">Delete</button></a>
+            </div>
+            <div *ngIf="prop != 'editLink' && prop != 'deleteLink' && prop != 'id'">
+                {{item[prop]}}
+            </div>
+
+        </td>
+    </tr>
+</table>

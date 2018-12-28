@@ -1,3 +1,7 @@
-<p>
-  edit-models works!
-</p>
+<h3> Models </h3>
+<app-editable-table
+        [fetchUrl]="['api/models']"
+        [newUrl]="['api/models/new']"
+        [editUrlPattern]="['api/models/edit/']"
+        [deleteUrlPattern]="['api/models/delete/']"
+        [columns]="[{name:'name', displayName:'Name'}]"></app-editable-table>

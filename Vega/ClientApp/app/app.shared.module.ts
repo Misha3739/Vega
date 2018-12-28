@@ -11,6 +11,9 @@ import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
 import { CounterComponent } from './components/counter/counter.component';
 import { VehicleFormComponent } from './components/vehicle-form/vehicle-form.component'
 import { VehicleService } from './services/vehicle.service';
+import { EditMakesComponent } from './components/makes/edit-makes/edit-makes.component'
+import { EditModelsComponent }  from './components/models/edit-models/edit-models.component';
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -18,7 +21,9 @@ import { VehicleService } from './services/vehicle.service';
         CounterComponent,
         FetchDataComponent,
         HomeComponent,
-        VehicleFormComponent
+		VehicleFormComponent,
+		EditMakesComponent,
+		EditModelsComponent
     ],
     imports: [
         CommonModule,
@@ -29,8 +34,10 @@ import { VehicleService } from './services/vehicle.service';
             { path: 'vehicles/new', component: VehicleFormComponent },
             { path: 'home', component: HomeComponent },
             { path: 'counter', component: CounterComponent },
-            { path: 'fetch-data', component: FetchDataComponent },
-            { path: '**', redirectTo: 'home' }
+			{ path: 'fetch-data', component: FetchDataComponent },
+			{ path: 'makes/edit', component: EditMakesComponent },
+			{ path: 'models/edit', component: EditModelsComponent },
+			{ path: '**', redirectTo: 'home' },
         ])
     ],
     providers : [

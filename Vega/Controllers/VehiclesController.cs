@@ -21,12 +21,12 @@ namespace vega.Controllers {
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreateVehicle([FromBody] SaveVehicleResource saveVehicle) {
+		public async Task<IActionResult> CreateVehicleAsync([FromBody] SaveVehicleResource saveVehicle) {
 			if (!ModelState.IsValid) {
 				return BadRequest(ModelState);
 			}
 
-			if (!await ValidateVehicle(saveVehicle)) {
+			if (!await ValidateVehicleAsync(saveVehicle)) {
 				return BadRequest(ModelState);
 			}
 
@@ -46,7 +46,7 @@ namespace vega.Controllers {
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdateVehicle(int id, [FromBody] SaveVehicleResource saveVehicle) {
+		public async Task<IActionResult> UpdateVehicleAsync(int id, [FromBody] SaveVehicleResource saveVehicle) {
 			if (!ModelState.IsValid) {
 				return BadRequest(ModelState);
 			}
@@ -57,7 +57,7 @@ namespace vega.Controllers {
 				return BadRequest(ModelState);
 			}
 
-			if (!await ValidateVehicle(saveVehicle)) {
+			if (!await ValidateVehicleAsync(saveVehicle)) {
 				return BadRequest(ModelState);
 			}
 
@@ -76,7 +76,7 @@ namespace vega.Controllers {
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteVehicle(int id) {
+		public async Task<IActionResult> DeleteVehicleAsync(int id) {
 			var domainVehicle = await _vehiclesRepository.GetAsync(id);
 			if (domainVehicle == null) {
 				ModelState.AddModelError("Id", $"Vehicle with Id = {id} not found!");
@@ -97,7 +97,7 @@ namespace vega.Controllers {
 		}
 
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetVehicle(int id) {
+		public async Task<IActionResult> GetVehicleAsync(int id) {
 			Vehicle domainVehicle = await _vehiclesRepository.GetWithDependenciesAsync(id);
 
 			if (domainVehicle == null) {
@@ -108,7 +108,7 @@ namespace vega.Controllers {
 			return Ok(result);
 		}
 
-		private async Task<bool> ValidateVehicle(SaveVehicleResource saveVehicle) {
+		private async Task<bool> ValidateVehicleAsync(SaveVehicleResource saveVehicle) {
 			if (!await _vehiclesRepository.IsModelExists(saveVehicle.ModelId)) {
 				ModelState.AddModelError("ModelId", $"Cannot find model with Id = {saveVehicle.ModelId}");
 			}

@@ -142,7 +142,7 @@ namespace Vega.Tests.Controllers {
 
 			_controller.ModelState.AddModelError("Contact", "The Contact Name field is required.");
 
-			IActionResult actual = await _controller.CreateVehicle(vehicleResource);
+			IActionResult actual = await _controller.CreateVehicleAsync(vehicleResource);
 
 			_vehiclesRepository.Verify(db => db.GetAsync(It.IsAny<int>()), Times.Never);
 			_vehiclesRepository.Verify(db => db.IsModelExists(It.IsAny<int>()), Times.Never);
@@ -158,7 +158,7 @@ namespace Vega.Tests.Controllers {
 
 			_controller.ModelState.AddModelError("Contact", "The Contact Name field is required.");
 
-			IActionResult actual = await _controller.UpdateVehicle(123, vehicleResource);
+			IActionResult actual = await _controller.UpdateVehicleAsync(123, vehicleResource);
 
 			_vehiclesRepository.Verify(db => db.GetWithDependenciesAsync(It.IsAny<int>()), Times.Never);
 			_vehiclesRepository.Verify(db => db.IsModelExists(It.IsAny<int>()), Times.Never);
@@ -181,7 +181,7 @@ namespace Vega.Tests.Controllers {
 
 			_vehiclesRepository.Setup(db => db.IsModelExists(1)).ReturnsAsync(false);
 
-			IActionResult actual = await _controller.CreateVehicle(vehicleResource);
+			IActionResult actual = await _controller.CreateVehicleAsync(vehicleResource);
 
 			_vehiclesRepository.Verify(db => db.GetAsync(It.IsAny<int>()), Times.Never);
 			_vehiclesRepository.Verify(db => db.IsModelExists(1), Times.Once);
@@ -216,7 +216,7 @@ namespace Vega.Tests.Controllers {
 			_vehiclesRepository.Setup(db => db.IsFeatureExists(3)).ReturnsAsync(false);
 			_vehiclesRepository.Setup(db => db.IsFeatureExists(9)).ReturnsAsync(false);
 
-			IActionResult actual = await _controller.CreateVehicle(vehicleResource);
+			IActionResult actual = await _controller.CreateVehicleAsync(vehicleResource);
 
 			_vehiclesRepository.Verify(db => db.GetAsync(It.IsAny<int>()), Times.Never);
 			_vehiclesRepository.Verify(db => db.IsModelExists(1), Times.Once);
@@ -248,7 +248,7 @@ namespace Vega.Tests.Controllers {
 
 			_vehiclesRepository.Setup(db => db.GetWithDependenciesAsync(122)).ReturnsAsync(default(Vehicle));
 
-			IActionResult actual = await _controller.UpdateVehicle(122, vehicleResource);
+			IActionResult actual = await _controller.UpdateVehicleAsync(122, vehicleResource);
 
 			_vehiclesRepository.Verify(db => db.GetWithDependenciesAsync(122), Times.Once);
 			_vehiclesRepository.Verify(db => db.IsModelExists(It.IsAny<int>()), Times.Never);
@@ -279,7 +279,7 @@ namespace Vega.Tests.Controllers {
 			_vehiclesRepository.Setup(db => db.GetWithDependenciesAsync(123)).ReturnsAsync(_vehicleWithId123);
 			_vehiclesRepository.Setup(db => db.IsModelExists(1)).ReturnsAsync(false);
 
-			IActionResult actual = await _controller.UpdateVehicle(123, vehicleResource);
+			IActionResult actual = await _controller.UpdateVehicleAsync(123, vehicleResource);
 
 			_vehiclesRepository.Verify(db => db.GetWithDependenciesAsync(123), Times.Once);
 			_vehiclesRepository.Verify(db => db.IsModelExists(1), Times.Once);
@@ -315,7 +315,7 @@ namespace Vega.Tests.Controllers {
 			_vehiclesRepository.Setup(db => db.IsFeatureExists(3)).ReturnsAsync(false);
 			_vehiclesRepository.Setup(db => db.IsFeatureExists(9)).ReturnsAsync(false);
 
-			IActionResult actual = await _controller.UpdateVehicle(123, vehicleResource);
+			IActionResult actual = await _controller.UpdateVehicleAsync(123, vehicleResource);
 
 			_vehiclesRepository.Verify(db => db.GetWithDependenciesAsync(123), Times.Once);
 			_vehiclesRepository.Verify(db => db.IsModelExists(1), Times.Once);
@@ -333,7 +333,7 @@ namespace Vega.Tests.Controllers {
 
 		[Test]
 		public async Task DeleteVehicle_CanValidateInput() {
-			IActionResult actual = await _controller.DeleteVehicle(122);
+			IActionResult actual = await _controller.DeleteVehicleAsync(122);
 
 			_vehiclesRepository.Verify(db => db.GetAsync(122), Times.Once);
 			_vehiclesRepository.Verify(db => db.Delete(It.IsAny<Vehicle>()), Times.Never);
@@ -349,7 +349,7 @@ namespace Vega.Tests.Controllers {
 
 		[Test]
 		public async Task GetVehicle_CanValidateInput() {
-			IActionResult actual = await _controller.GetVehicle(122);
+			IActionResult actual = await _controller.GetVehicleAsync(122);
 
 			Assert.IsInstanceOf<NotFoundObjectResult>(actual);
 			Assert.AreEqual(122, (int) ((NotFoundObjectResult) actual).Value);
@@ -374,7 +374,7 @@ namespace Vega.Tests.Controllers {
 			//Stub reload entity after saving, no Id specified
 			_vehiclesRepository.Setup(db => db.GetWithDependenciesAsync(It.IsAny<int>())).ReturnsAsync(_createdVehicle);
 
-			IActionResult actual = await _controller.CreateVehicle(vehicleResource);
+			IActionResult actual = await _controller.CreateVehicleAsync(vehicleResource);
 
 			_vehiclesRepository.Verify(db => db.GetAsync(It.IsAny<int>()), Times.Never);
 			_vehiclesRepository.Verify(db => db.IsModelExists(2), Times.Once);
@@ -413,7 +413,7 @@ namespace Vega.Tests.Controllers {
 			_vehiclesRepository.Setup(db => db.IsModelExists(3)).ReturnsAsync(true);
 			_vehiclesRepository.Setup(db => db.IsFeatureExists(It.IsInRange(5, 8, Range.Inclusive))).ReturnsAsync(true);
 
-			IActionResult actual = await _controller.UpdateVehicle(123, vehicleResource);
+			IActionResult actual = await _controller.UpdateVehicleAsync(123, vehicleResource);
 
 			_vehiclesRepository.Verify(db => db.IsModelExists(3), Times.Once);
 			_vehiclesRepository.Verify(db => db.IsFeatureExists(It.IsAny<int>()), Times.Exactly(3));
@@ -436,7 +436,7 @@ namespace Vega.Tests.Controllers {
 		public async Task CanDeleteVehicle() {
 			_vehiclesRepository.Setup(db => db.GetAsync(123)).ReturnsAsync(_vehicleWithId123);
 
-			IActionResult actual = await _controller.DeleteVehicle(123);
+			IActionResult actual = await _controller.DeleteVehicleAsync(123);
 
 			_vehiclesRepository.Verify(db => db.GetAsync(123), Times.Once);
 			_vehiclesRepository.Verify(db => db.Delete(It.Is<Vehicle>(v => v.Equals(_vehicleWithId123))), Times.Once);
@@ -451,7 +451,7 @@ namespace Vega.Tests.Controllers {
 		public async Task CanGetVehicle() {
 			_vehiclesRepository.Setup(db => db.GetWithDependenciesAsync(123)).ReturnsAsync(_vehicleWithId123);
 
-			IActionResult actual = await _controller.GetVehicle(123);
+			IActionResult actual = await _controller.GetVehicleAsync(123);
 
 			_vehiclesRepository.Verify(db => db.GetWithDependenciesAsync(123), Times.Once);
 			_vehiclesRepository.Verify(db => db.GetAsync(It.IsAny<int>()), Times.Never);

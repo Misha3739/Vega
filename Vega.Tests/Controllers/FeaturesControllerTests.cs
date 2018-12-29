@@ -41,7 +41,7 @@ namespace Vega.Tests.Controllers {
 		public void CanGetMakes() {
 			_featuresRepository.Setup(repo => repo.GetAllAsync()).ReturnsAsync(_features);
 
-			var makes = _controller.GetFeatures();
+			var makes = _controller.GetFeaturesAsync();
 
 			_featuresRepository.Verify(repo => repo.GetAllAsync(), Times.Once);
 			_mapper.Verify(mapper => mapper.Map<List<Feature>, List<KeyValuePairResource>>(_features), Times.Once);

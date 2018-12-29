@@ -13,7 +13,6 @@ export class AnyService {
   }
 
   deleteItem(url: string) {
-    return this.http.delete(url)
-        .map(res => res.json());
+    return this.http.delete(url);
   }
 }

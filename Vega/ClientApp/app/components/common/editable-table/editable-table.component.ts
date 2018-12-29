@@ -52,7 +52,13 @@ export class EditableTableComponent implements OnInit {
   private deleteClick(id: number) {
     this.service.deleteItem(this.deleteUrlPattern + id).subscribe(
         result => {
+          console.log(result);
+          this.data = [];
+          this.displayData = [];
           this.loadData();
+        },
+        (err) => {
+          alert("Error on deleting model with id" + id +" : "+err);
         }
     );
   }

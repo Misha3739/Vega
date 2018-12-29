@@ -14,8 +14,8 @@ namespace vega.Persistence.Repositories
 			_dbContext = dbContext;
 		}
 
-		public Task<Make> GetAsync(int id) {
-			throw new NotImplementedException();
+		public async Task<Make> GetAsync(int id) {
+			return await _dbContext.Makes.FindAsync(id);
 		}
 
 		public async Task<List<Make>> GetAllAsync() {
@@ -31,7 +31,7 @@ namespace vega.Persistence.Repositories
 		}
 
 		public void Delete(Make value) {
-			throw new NotImplementedException();
+			_dbContext.Makes.Remove(value);
 		}
 	}
 }

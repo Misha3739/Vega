@@ -1,0 +1,48 @@
+<h3>Make</h3>
+<form [formGroup]="makeForm"  (ngSubmit)="submit()">
+  <div class="form-group">
+    <div class="row">
+      <div class="col-xs-12">
+        <label for="name">Name</label>
+        <input type="text"
+               formControlName = "name"
+               [(ngModel)]="make.name"
+               id="name"
+               class="form-control text-edit ">
+      </div>
+    </div>
+
+    <h6>Models</h6>
+    <div class="row">
+      <div class="col-xs-12" formArrayName="models">
+        <div class="row" *ngFor="let model of getFormControls('models'); let i = index"
+             style="margin-top: 10px"
+             [formGroupName]="i">
+          <div class="form-group" >
+            <div class="col-xs-4">
+              <input type="text" class="form-control text-edit" formControlName="name">
+            </div>
+            <button type="button" class="btn btn-danger" (click)="onDeleteModel(i)">X</button>
+          </div>
+        </div>
+        <hr/>
+        <div class="row">
+          <div class="col-xs-12">
+            <button type="button" class="btn btn-success" (click)="onAddModel()">Add new model</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row save-buttons-container">
+      <div class="col-xs-12">
+        <button
+                type="submit"
+                class="btn btn-success"
+                [disabled]="!makeForm.valid"
+        >Save</button>
+        <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</form>

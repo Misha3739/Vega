@@ -1,8 +1,9 @@
 <h3> Makes </h3>
 <app-editable-table
         [fetchUrl]="['api/makes']"
-        [newUrl]="['api/makes/new']"
+        [newUrl]="['makes/edit/new']"
         [newLinkLabel]="['Create new Make']"
-        [editUrlPattern]="['api/make/edit/']"
+        [editUrlPattern]="['makes/edit/']"
         [deleteUrlPattern]="['api/make/delete/']"
         [columns]="[{name:'name', displayName:'Name'}]"></app-editable-table>
+<router-outlet></router-outlet>

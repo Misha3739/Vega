@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
@@ -15,6 +15,7 @@ import { EditMakesComponent } from './components/makes/edit-makes/edit-makes.com
 import { EditModelsComponent }  from './components/models/edit-models/edit-models.component';
 import {EditableTableComponent} from "./components/common/editable-table/editable-table.component";
 import {AnyService} from "./services/any.service";
+import { EditMakeComponent } from "./components/makes/edit-make/edit-make.component";
 
 @NgModule({
     declarations: [
@@ -25,6 +26,7 @@ import {AnyService} from "./services/any.service";
         HomeComponent,
 		VehicleFormComponent,
 		EditMakesComponent,
+        EditMakeComponent,
 		EditModelsComponent,
         EditableTableComponent
     ],
@@ -32,13 +34,17 @@ import {AnyService} from "./services/any.service";
         CommonModule,
         HttpModule,
         FormsModule,
+        ReactiveFormsModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'vehicles/new', component: VehicleFormComponent },
             { path: 'home', component: HomeComponent },
             { path: 'counter', component: CounterComponent },
 			{ path: 'fetch-data', component: FetchDataComponent },
-			{ path: 'makes/edit', component: EditMakesComponent },
+			{ path: 'makes/edit', component: EditMakesComponent, children: [
+			    { path: ':id', component: EditMakeComponent },
+                { path: 'new', component: EditMakeComponent }
+                ] },
 			{ path: 'models/edit', component: EditModelsComponent },
 			{ path: '**', redirectTo: 'home' },
         ])

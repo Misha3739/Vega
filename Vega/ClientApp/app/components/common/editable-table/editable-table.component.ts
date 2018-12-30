@@ -12,6 +12,7 @@ export class EditableTableComponent implements OnInit {
   @Input() fetchUrl: string
   @Input() editUrlPattern: string
   @Input() newUrl: string
+  @Input() newLinkLabel:string
   @Input() deleteUrlPattern: string
   @Input() columns: ColumnItem[]
   constructor(private service: AnyService) {

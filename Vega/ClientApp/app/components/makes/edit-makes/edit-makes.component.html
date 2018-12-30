@@ -2,6 +2,7 @@
 <app-editable-table
         [fetchUrl]="['api/makes']"
         [newUrl]="['api/makes/new']"
+        [newLinkLabel]="['Create new Make']"
         [editUrlPattern]="['api/makes/edit/']"
         [deleteUrlPattern]="['api/makes/delete/']"
         [columns]="[{name:'name', displayName:'Name'}]"></app-editable-table>

@@ -15,7 +15,7 @@ namespace vega.Persistence.Repositories
 		}
 
 		public async Task<Make> GetAsync(int id) {
-			return await _dbContext.Makes.FindAsync(id);
+			return await _dbContext.Makes.Include(m => m.Models).FirstOrDefaultAsync(m => m.Id == id);
 		}
 
 		public async Task<List<Make>> GetAllAsync() {

@@ -26,6 +26,17 @@ namespace vega.Controllers {
 			return mapper.Map<List<Make>, List<MakeResource>>(makes);
 		}
 
+		[HttpGet("/api/makes/{id}")]
+		public async Task<IActionResult> GetMakeAsync(int id) {
+			var make = await _repository.GetAsync(id);
+			if (make != null) {
+				var result = mapper.Map<Make, MakeResource>(make);
+				return Ok(result);
+			} else {
+				return NotFound($"Make with id = {id} does not exist!");
+			}
+		}
+
 		[HttpDelete("/api/make/delete/{id}")]
 		public async Task<IActionResult> DeleteAsync(int id) {
 			var make = await _repository.GetAsync(id);

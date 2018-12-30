@@ -18,5 +18,11 @@ namespace Vega.Tests.Controllers {
 			BadRequestObjectResult result = actual as BadRequestObjectResult;
 			return result.Value?.ToString();
 		}
+
+		public static string GetNotFoundError(IActionResult actual) {
+			Assert.IsInstanceOf<NotFoundObjectResult>(actual);
+			NotFoundObjectResult result = actual as NotFoundObjectResult;
+			return result.Value?.ToString();
+		}
 	}
 }

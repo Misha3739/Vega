@@ -67,6 +67,33 @@ namespace Vega.Tests.Controllers {
 		}
 
 		[Test]
+		public async Task CanGetMake() {
+			const int makeId = 123;
+			_makesRepository.Setup(repo => repo.GetAsync(makeId)).ReturnsAsync(_makes.First());
+
+			var actual = await _controller.GetMakeAsync(makeId);
+
+			_makesRepository.Verify(repo => repo.GetAsync(makeId), Times.Once);
+			_mapper.Verify(m => m.Map<Make, MakeResource>(_makes.First()), Times.Once);
+
+			Assert.IsInstanceOf<OkObjectResult>(actual);
+		}
+
+		[Test]
+		public async Task CanGetMakeIfDoesNotExist() {
+			const int makeId = 123;
+			_makesRepository.Setup(repo => repo.GetAsync(makeId)).ReturnsAsync(default(Make));
+
+			var actual = await _controller.GetMakeAsync(makeId);
+
+			_makesRepository.Verify(repo => repo.GetAsync(makeId), Times.Once);
+			_mapper.Verify(m => m.Map<Make, MakeResource>(_makes.First()), Times.Never);
+
+			var error = ControllerTestHelper.GetNotFoundError(actual);
+			Assert.AreEqual("Make with id = 123 does not exist!", error);
+		}
+
+		[Test]
 		public async Task CanDeleteUnexistingMake() {
 			const int makeId = 123;
 			_makesRepository.Setup(repo => repo.GetAsync(makeId)).ReturnsAsync(default(Make));

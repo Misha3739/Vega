@@ -26,7 +26,7 @@ namespace vega.Controllers {
 			return mapper.Map<List<Make>, List<MakeResource>>(makes);
 		}
 
-		[HttpDelete("/api/makes/delete/{id}")]
+		[HttpDelete("/api/make/delete/{id}")]
 		public async Task<IActionResult> DeleteAsync(int id) {
 			var make = await _repository.GetAsync(id);
 			if (make != null) {

@@ -1,13 +1,14 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {AnyService} from "../../../services/any.service";
 import {ColumnItem} from "../../../models/common/column-item";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-editable-table',
   templateUrl: './editable-table.component.html',
   styleUrls: ['./editable-table.component.css']
 })
-export class EditableTableComponent implements OnInit {
+export class EditableTableComponent implements OnInit, OnDestroy {
 
   @Input() fetchUrl: string
   @Input() editUrlPattern: string
@@ -22,11 +23,14 @@ export class EditableTableComponent implements OnInit {
 
   private displayData: any[] = [];
 
+  loadDataSubscription: Subscription;
+  deleteSubscription: Subscription;
+
   ngOnInit() {
     this.loadData()
   }
   private loadData() {
-    this.service.getAny(this.fetchUrl).subscribe(result => {
+    this.loadDataSubscription = this.service.getAny(this.fetchUrl).subscribe(result => {
       this.data = result;
 
       for(let i = 0;i<this.data.length; i++) {
@@ -47,11 +51,13 @@ export class EditableTableComponent implements OnInit {
 
         this.displayData.push(displayItem);
       }
+    },(err) => {
+      alert("Error on fetching  items for url" + this.fetchUrl +" : "+err);
     });
   }
 
   private deleteClick(id: number) {
-    this.service.deleteItem(this.deleteUrlPattern + id).subscribe(
+    this.deleteSubscription = this.service.deleteItem(this.deleteUrlPattern + id).subscribe(
         result => {
           console.log(result);
           this.data = [];
@@ -59,7 +65,7 @@ export class EditableTableComponent implements OnInit {
           this.loadData();
         },
         (err) => {
-          alert("Error on deleting model with id" + id +" : "+err);
+          alert("Error on deleting item with id" + id +" : "+err);
         }
     );
   }
@@ -71,6 +77,13 @@ export class EditableTableComponent implements OnInit {
         keys.push(key);
     }
     return keys;
+  }
+
+  ngOnDestroy() {
+    this.loadDataSubscription.unsubscribe();
+    if(this.deleteSubscription) {
+      this.deleteSubscription.unsubscribe();
+    }
   }
 
 }

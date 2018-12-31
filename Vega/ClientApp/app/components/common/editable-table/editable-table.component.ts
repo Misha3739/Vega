@@ -32,7 +32,7 @@ export class EditableTableComponent implements OnInit, OnDestroy {
   }
   private loadData() {
     this.loadDataSubscription = this.service.dataFetched.subscribe((fetched: string) => {
-      if(fetched === this.sourceName) {
+      if(fetched == this.sourceName) {
         this.data = this.service.getData(this.sourceName) as any[];
         for(let i = 0;i<this.data.length; i++) {
           let dataItem = this.data[i];

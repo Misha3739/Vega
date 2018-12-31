@@ -17,6 +17,7 @@ export class EditMakeComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute, private anyService: AnyService) { }
 
   subscription: Subscription;
+  fetchedSubscription: Subscription;
 
   make: Make;
   makeForm: FormGroup;
@@ -26,9 +27,13 @@ export class EditMakeComponent implements OnInit, OnDestroy {
         (params: Params) => {
           this.editMode = params['id'] != null && params['id'] != 'new' ? true : false;
           this.id = this.editMode ? params['id'] : 0;
-          console.log("Makes:" + this.anyService.getData('makes'));
           this.initForm();
         });
+
+        this.fetchedSubscription = this.anyService.dataFetched.subscribe((fetched: string) => {
+            if(fetched == 'makes') {
+                this.initForm();
+            }});
   }
 
   private initForm() {
@@ -44,9 +49,9 @@ export class EditMakeComponent implements OnInit, OnDestroy {
                       }));
                   }
               }
-          }
-        } else {
-          this.make = new Make(0,'',[]);
+          } else {
+            this.make = new Make(0,'',[]);
+        } 
       }
       this.makeForm = new FormGroup({
           'name': new FormControl(this.make.name, [Validators.required]),
@@ -80,5 +85,8 @@ export class EditMakeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    if(this.fetchedSubscription) {
+        this.fetchedSubscription.unsubscribe();
+    }
   }
 }

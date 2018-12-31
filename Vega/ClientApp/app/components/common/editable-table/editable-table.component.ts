@@ -33,7 +33,7 @@ export class EditableTableComponent implements OnInit, OnDestroy {
   private loadData() {
     this.loadDataSubscription = this.service.dataFetched.subscribe((fetched: string) => {
       if(fetched === this.sourceName) {
-        this.data = (this.service.fetchedData.filter(f => f.key == this.sourceName))[0].data;
+        this.data = this.service.getData(this.sourceName) as any[];
         for(let i = 0;i<this.data.length; i++) {
           let dataItem = this.data[i];
           let displayItem: any = {};
@@ -54,7 +54,9 @@ export class EditableTableComponent implements OnInit, OnDestroy {
         }
       }
     });
-    this.loadDataSubscription = this.service.getAny(this.fetchUrl,this.sourceName);
+    if(!this.service.hasData(this.sourceName)){
+      this.service.getAny(this.fetchUrl,this.sourceName);
+    }
   }
 
   private deleteClick(id: number) {

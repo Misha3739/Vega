@@ -26,7 +26,7 @@ export class EditMakeComponent implements OnInit, OnDestroy {
         (params: Params) => {
           this.editMode = params['id'] != null && params['id'] != 'new' ? true : false;
           this.id = this.editMode ? params['id'] : 0;
-            console.log(this.anyService.fetchedData);
+          console.log("Makes:" + this.anyService.getData('makes'));
           this.initForm();
         });
   }

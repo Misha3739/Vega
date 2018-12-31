@@ -12,7 +12,7 @@ export class AnyService {
         return AnyService.instance = AnyService.instance || this;
     }
 
-    fetchedData:FetchedData[] = [];
+    private fetchedData:FetchedData[] = [];
 
     dataFetched = new Subject();
 
@@ -37,6 +37,15 @@ export class AnyService {
       }
       return null;
   }
+
+  hasData(key: string) {
+      return this.fetchedData.find(f => f.key == key);
+  }
+
+  getData(key: string) {
+    let found = this.fetchedData.find(f => f.key == key);
+    return found? found.data : null;
+}
 
   deleteItem(url: string) {
     return this.http.delete(url);

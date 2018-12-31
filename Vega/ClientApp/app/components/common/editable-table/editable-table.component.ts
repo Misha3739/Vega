@@ -10,6 +10,7 @@ import {Subscription} from "rxjs";
 })
 export class EditableTableComponent implements OnInit, OnDestroy {
 
+  @Input() sourceName: string;
   @Input() fetchUrl: string
   @Input() editUrlPattern: string
   @Input() newUrl: string
@@ -30,30 +31,30 @@ export class EditableTableComponent implements OnInit, OnDestroy {
     this.loadData()
   }
   private loadData() {
-    this.loadDataSubscription = this.service.getAny(this.fetchUrl).subscribe(result => {
-      this.data = result;
+    this.loadDataSubscription = this.service.dataFetched.subscribe((fetched: string) => {
+      if(fetched === this.sourceName) {
+        this.data = (this.service.fetchedData.filter(f => f.key == this.sourceName))[0].data;
+        for(let i = 0;i<this.data.length; i++) {
+          let dataItem = this.data[i];
+          let displayItem: any = {};
 
-      for(let i = 0;i<this.data.length; i++) {
-        let dataItem = this.data[i];
-        let displayItem: any = {};
-
-        //fill original data item properties matching columns
-        for(let c = 0;c < this.columns.length;c++) {
-          let column = this.columns[c];
-          if(dataItem.hasOwnProperty(column.name)) {
-            displayItem[column.name] = dataItem[column.name];
+          //fill original data item properties matching columns
+          for (let c = 0; c < this.columns.length; c++) {
+            let column = this.columns[c];
+            if (dataItem.hasOwnProperty(column.name)) {
+              displayItem[column.name] = dataItem[column.name];
+            }
           }
+
+          displayItem['editLink'] = this.editUrlPattern + dataItem['id'];
+          displayItem['deleteLink'] = this.deleteUrlPattern + dataItem['id'];
+          displayItem['id'] = dataItem['id'];
+
+          this.displayData.push(displayItem);
         }
-
-        displayItem['editLink'] = this.editUrlPattern + dataItem['id'];
-        displayItem['deleteLink'] = this.deleteUrlPattern + dataItem['id'];
-        displayItem['id'] = dataItem['id'];
-
-        this.displayData.push(displayItem);
       }
-    },(err) => {
-      alert("Error on fetching  items for url" + this.fetchUrl +" : "+err);
     });
+    this.loadDataSubscription = this.service.getAny(this.fetchUrl,this.sourceName);
   }
 
   private deleteClick(id: number) {

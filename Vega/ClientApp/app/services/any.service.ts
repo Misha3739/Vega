@@ -6,12 +6,15 @@ import {Subject} from "rxjs";
 
 @Injectable()
 export class AnyService {
+    static instance:AnyService;
 
-  constructor(private http: Http) { }
+    constructor(private http: Http) {
+        return AnyService.instance = AnyService.instance || this;
+    }
 
-  fetchedData:FetchedData[] = [];
+    fetchedData:FetchedData[] = [];
 
-  dataFetched = new Subject();
+    dataFetched = new Subject();
 
   getAny(url: string, key: string) {
     return this.http.get(url)
@@ -25,6 +28,14 @@ export class AnyService {
             }
             this.dataFetched.next(key);
         });
+  }
+
+  getFetchedItem(key: string, id: number): any {
+      let fetched = (this.fetchedData.filter(f => f.key == key))[0];
+      if(fetched) {
+          return fetched.data.find(d => d.id == id);
+      }
+      return null;
   }
 
   deleteItem(url: string) {

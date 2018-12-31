@@ -16,6 +16,7 @@ import { EditModelsComponent }  from './components/models/edit-models/edit-model
 import {EditableTableComponent} from "./components/common/editable-table/editable-table.component";
 import {AnyService} from "./services/any.service";
 import { EditMakeComponent } from "./components/makes/edit-make/edit-make.component";
+import {MakeService} from "./services/make.service";
 
 @NgModule({
     declarations: [
@@ -51,7 +52,8 @@ import { EditMakeComponent } from "./components/makes/edit-make/edit-make.compon
     ],
     providers : [
         VehicleService,
-        AnyService
+        AnyService,
+        MakeService
     ]
 })
 export class AppModuleShared {

@@ -28,34 +28,38 @@ export class EditableTableComponent implements OnInit, OnDestroy {
   deleteSubscription: Subscription;
 
   ngOnInit() {
-    this.loadData()
-  }
-  private loadData() {
     this.loadDataSubscription = this.service.dataFetched.subscribe((fetched: string) => {
       if(fetched == this.sourceName) {
-        this.data = this.service.getData(this.sourceName) as any[];
-        for(let i = 0;i<this.data.length; i++) {
-          let dataItem = this.data[i];
-          let displayItem: any = {};
-
-          //fill original data item properties matching columns
-          for (let c = 0; c < this.columns.length; c++) {
-            let column = this.columns[c];
-            if (dataItem.hasOwnProperty(column.name)) {
-              displayItem[column.name] = dataItem[column.name];
-            }
-          }
-
-          displayItem['editLink'] = this.editUrlPattern + dataItem['id'];
-          displayItem['deleteLink'] = this.deleteUrlPattern + dataItem['id'];
-          displayItem['id'] = dataItem['id'];
-
-          this.displayData.push(displayItem);
-        }
+        this.loadData();
       }
     });
     if(!this.service.hasData(this.sourceName)){
       this.service.getAny(this.fetchUrl,this.sourceName);
+    } else {
+      this.loadData();
+    }
+  }
+
+
+  private loadData() {
+    this.data = this.service.getData(this.sourceName) as any[];
+    for(let i = 0;i<this.data.length; i++) {
+      let dataItem = this.data[i];
+      let displayItem: any = {};
+
+      //fill original data item properties matching columns
+      for (let c = 0; c < this.columns.length; c++) {
+        let column = this.columns[c];
+        if (dataItem.hasOwnProperty(column.name)) {
+          displayItem[column.name] = dataItem[column.name];
+        }
+      }
+
+      displayItem['editLink'] = this.editUrlPattern + dataItem['id'];
+      displayItem['deleteLink'] = this.deleteUrlPattern + dataItem['id'];
+      displayItem['id'] = dataItem['id'];
+
+      this.displayData.push(displayItem);
     }
   }
 

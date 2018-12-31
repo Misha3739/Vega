@@ -4,6 +4,7 @@ import {Subscription} from "rxjs";
 import {Make} from "../../../models/make";
 import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AnyService} from "../../../services/any.service";
+import {MakeService} from "../../../services/make.service";
 
 @Component({
   selector: 'app-edit-make',
@@ -14,10 +15,14 @@ export class EditMakeComponent implements OnInit, OnDestroy {
   private  id: number;
   private editMode = false;
 
-  constructor(private route: ActivatedRoute, private anyService: AnyService) { }
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private anyService: AnyService,
+              private makeService: MakeService) { }
 
   subscription: Subscription;
   fetchedSubscription: Subscription;
+  saveSubscription: Subscription;
 
   make: Make;
   makeForm: FormGroup;
@@ -27,16 +32,16 @@ export class EditMakeComponent implements OnInit, OnDestroy {
         (params: Params) => {
           this.editMode = params['id'] != null && params['id'] != 'new' ? true : false;
           this.id = this.editMode ? params['id'] : 0;
-          this.initForm();
+          this.loadData();
         });
 
         this.fetchedSubscription = this.anyService.dataFetched.subscribe((fetched: string) => {
             if(fetched == 'makes') {
-                this.initForm();
+                this.loadData();
             }});
   }
 
-  private initForm() {
+  private loadData() {
       let models = new FormArray([]);
       if(this.editMode) {
         this.make = this.anyService.getFetchedItem('makes', this.id);
@@ -72,21 +77,37 @@ export class EditMakeComponent implements OnInit, OnDestroy {
   }
 
   onCancel() {
-
+      this.router.navigate(['/makes/edit']);
   }
 
   getFormControls(controlGroup: string) {
         return   (<FormArray>this.makeForm.get(controlGroup)).controls;
   }
 
-  submit() {
-
+  onSubmit() {
+      if(this.editMode) {
+          this.saveSubscription = this.makeService.updateMake(this.make, this.id).
+              subscribe(result => {
+                  console.log(result);
+                this.router.navigate(['/makes/edit']);
+          });
+      }
+     else {
+          this.saveSubscription = this.saveSubscription = this.makeService.createMake(this.make).
+            subscribe(result => {
+              console.log(result);
+              this.router.navigate(['/makes/edit']);
+          });
+      }
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
     if(this.fetchedSubscription) {
         this.fetchedSubscription.unsubscribe();
+    }
+    if(this.saveSubscription) {
+        this.saveSubscription.unsubscribe()
     }
   }
 }

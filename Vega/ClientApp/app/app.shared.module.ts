@@ -12,7 +12,6 @@ import { CounterComponent } from './components/counter/counter.component';
 import { VehicleFormComponent } from './components/vehicle-form/vehicle-form.component'
 import { VehicleService } from './services/vehicle.service';
 import { EditMakesComponent } from './components/makes/edit-makes/edit-makes.component'
-import { EditModelsComponent }  from './components/models/edit-models/edit-models.component';
 import {EditableTableComponent} from "./components/common/editable-table/editable-table.component";
 import {AnyService} from "./services/any.service";
 import { EditMakeComponent } from "./components/makes/edit-make/edit-make.component";
@@ -28,7 +27,6 @@ import {MakeService} from "./services/make.service";
 		VehicleFormComponent,
 		EditMakesComponent,
         EditMakeComponent,
-		EditModelsComponent,
         EditableTableComponent
     ],
     imports: [
@@ -46,7 +44,6 @@ import {MakeService} from "./services/make.service";
 			    { path: ':id', component: EditMakeComponent },
                 { path: 'new', component: EditMakeComponent }
                 ] },
-			{ path: 'models/edit', component: EditModelsComponent },
 			{ path: '**', redirectTo: 'home' },
         ])
     ],

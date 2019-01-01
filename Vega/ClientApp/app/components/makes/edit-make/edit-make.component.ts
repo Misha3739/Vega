@@ -87,15 +87,16 @@ export class EditMakeComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+      let makeToSave = this.makeForm.value;
       if(this.editMode) {
-          this.saveSubscription = this.makeService.updateMake(this.make, this.id).
+          this.saveSubscription = this.makeService.updateMake(makeToSave, this.id).
               subscribe(result => {
                   console.log(result);
                 this.router.navigate(['/makes/edit']);
           });
       }
      else {
-          this.saveSubscription = this.saveSubscription = this.makeService.createMake(this.make).
+          this.saveSubscription = this.saveSubscription = this.makeService.createMake(makeToSave).
             subscribe(result => {
               console.log(result);
               this.router.navigate(['/makes/edit']);

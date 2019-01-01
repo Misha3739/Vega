@@ -26,8 +26,8 @@ namespace vega.Persistence.Repositories
 			throw new NotImplementedException();
 		}
 
-		public Task CreateAsync(Make value) {
-			throw new NotImplementedException();
+		public async Task CreateAsync(Make value) {
+			await _dbContext.Makes.AddAsync(value);
 		}
 
 		public void Delete(Make value) {

@@ -10,11 +10,11 @@ using vega.Models;
 namespace vega.Controllers {
 	public class MakesController : Controller {
 		private readonly IMakesRepository _repository;
-		private readonly IMapper mapper;
+		private readonly IMapper _mapper;
 		private readonly IUnitOfWork _unitOfWork;
 
 		public MakesController(IMakesRepository repository, IMapper mapper, IUnitOfWork unitOfWork) {
-			this.mapper = mapper;
+			this._mapper = mapper;
 			this._unitOfWork = unitOfWork;
 			this._repository = repository;
 		}
@@ -23,17 +23,49 @@ namespace vega.Controllers {
 		public async Task<IEnumerable<MakeResource>> GetMakesAsync() {
 			var makes = await _repository.GetAllAsync();
 
-			return mapper.Map<List<Make>, List<MakeResource>>(makes);
+			return _mapper.Map<List<Make>, List<MakeResource>>(makes);
 		}
 
 		[HttpGet("/api/makes/{id}")]
 		public async Task<IActionResult> GetMakeAsync(int id) {
 			var make = await _repository.GetAsync(id);
 			if (make != null) {
-				var result = mapper.Map<Make, MakeResource>(make);
+				var result = _mapper.Map<Make, MakeResource>(make);
 				return Ok(result);
 			} else {
 				return NotFound($"Make with id = {id} does not exist!");
+			}
+		}
+
+		[HttpPost("/api/makes")]
+		public async Task<IActionResult> CreateMakeAsync([FromBody] MakeResource make) {
+			if (!ModelState.IsValid) {
+				return BadRequest(ModelState);
+			}
+
+			try {
+				Make domainMake = _mapper.Map<MakeResource, Make>(make);
+				await _repository.CreateAsync(domainMake);
+				await _unitOfWork.CompeleteAsync();
+				int id = domainMake.Id;
+				Make found = await _repository.GetAsync(id);
+				MakeResource result = _mapper.Map<Make, MakeResource>(found);
+				return Ok(result);
+			} catch (Exception e) {
+				return StatusCode(500, e.InnerException?.Message ?? e.Message);
+			}
+		}
+
+		[HttpPut("/api/makes/{id}")]
+		public async Task<IActionResult> UpdateMakeAsync(int id, [FromBody] MakeResource make) {
+			if (!ModelState.IsValid) {
+				return BadRequest(ModelState);
+			}
+
+			try {
+				 throw new NotImplementedException();
+			} catch (Exception e) {
+				return StatusCode(500, e.InnerException?.Message ?? e.Message);
 			}
 		}
 

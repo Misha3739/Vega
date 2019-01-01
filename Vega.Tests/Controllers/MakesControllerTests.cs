@@ -19,16 +19,33 @@ namespace Vega.Tests.Controllers {
 		private readonly Mock<IMakesRepository> _makesRepository;
 		private readonly Mock<IUnitOfWork> _unitOfWork;
 		private readonly MakesController _controller;
-		
 
 		private List<Make> _makes;
+
+		private MakeResource _makeResource = new MakeResource {
+			Name = "Audi",
+			Models = new List<KeyValuePairResource>() {
+				new KeyValuePairResource() {
+					Name = "Q7"
+				}
+			}
+		};
+
+		private Make _savedMake = new Make {
+			Name = "Audi",
+			Models = new List<Model>() {
+				new Model() {
+					Name = "Q7"
+				}
+			}
+		};
 
 		public MakesControllerTests() {
 			_makesRepository = new Mock<IMakesRepository>();
 			_unitOfWork = new Mock<IUnitOfWork>();
 			_mapper = new Mock<IMapper>();
 
-			_controller = new MakesController(_makesRepository.Object,  _mapper.Object, _unitOfWork.Object);
+			_controller = new MakesController(_makesRepository.Object, _mapper.Object, _unitOfWork.Object);
 		}
 
 		[SetUp]
@@ -54,6 +71,7 @@ namespace Vega.Tests.Controllers {
 		[TearDown]
 		public void TearDown() {
 			_makesRepository.Reset();
+			_controller.ModelState.Clear();
 		}
 
 		[Test]
@@ -102,7 +120,7 @@ namespace Vega.Tests.Controllers {
 
 			_makesRepository.Verify(repo => repo.GetAsync(makeId), Times.Once);
 			var error = ControllerTestHelper.GetBadRequestError(actual);
-			Assert.AreEqual("Make with id = 123 does not exist!",error);
+			Assert.AreEqual("Make with id = 123 does not exist!", error);
 		}
 
 		[Test]
@@ -132,6 +150,66 @@ namespace Vega.Tests.Controllers {
 			_makesRepository.Verify(repo => repo.Delete(make), Times.Once);
 			var error = ControllerTestHelper.GetBadRequestError(actual);
 			Assert.AreEqual($"Cannot delete make with id = 123 : \"Sql exception occured\"", error);
+		}
+
+		[Test]
+		public async Task CanValidateMake_CreateMake_RequiredFielsAreMissing() {
+			MakeResource makeResource = new MakeResource {
+				Name = null
+			};
+
+			_controller.ModelState.AddModelError("Name", "Name field is required.");
+
+			IActionResult actual = await _controller.CreateMakeAsync(makeResource);
+
+			_makesRepository.Verify(db => db.GetAsync(It.IsAny<int>()), Times.Never);
+			var errors = ControllerTestHelper.GetBadRequestErrors(actual);
+			Assert.AreEqual(new[] { "Name field is required." }, errors["Name"]);
+		}
+
+		[Test]
+		public async Task CanCreateMake() {
+			_mapper.Setup(mapper => mapper.Map<MakeResource, Make>(_makeResource)).Returns(_savedMake);
+			_makesRepository.Setup(db => db.GetAsync(It.IsAny<int>())).Returns(Task.FromResult(_savedMake));
+
+			IActionResult actual = await _controller.CreateMakeAsync(_makeResource);
+
+			_mapper.Verify(mapper => mapper.Map<MakeResource, Make>(_makeResource), Times.Once);
+			_makesRepository.Verify(db => db.CreateAsync(_savedMake), Times.Once);
+			_unitOfWork.Verify(db => db.CompeleteAsync(), Times.Once);
+			_makesRepository.Verify(db => db.GetAsync(It.IsAny<int>()), Times.Once);
+			_mapper.Verify(mapper => mapper.Map<Make, MakeResource>(_savedMake), Times.Once);
+			Assert.IsInstanceOf<OkObjectResult>(actual);
+		}
+
+		[Test]
+		public async Task CanCreateMake_SaveThrowsException() {
+			_mapper.Setup(mapper => mapper.Map<MakeResource, Make>(_makeResource)).Returns(_savedMake);
+			_unitOfWork.Setup(db => db.CompeleteAsync()).Throws(new Exception("SQL Statement error"));
+
+			IActionResult actual = await _controller.CreateMakeAsync(_makeResource);
+
+			_mapper.Verify(mapper => mapper.Map<MakeResource, Make>(_makeResource), Times.Once);
+			_makesRepository.Verify(db => db.CreateAsync(_savedMake), Times.Once);
+			_makesRepository.Verify(db => db.GetAsync(It.IsAny<int>()), Times.Never);
+			_mapper.Verify(mapper => mapper.Map<Make, MakeResource>(It.IsAny<Make>()), Times.Never);
+			Assert.AreEqual(500, (actual as ObjectResult)?.StatusCode);
+			Assert.AreEqual("SQL Statement error", (actual as ObjectResult)?.Value?.ToString());
+		}
+
+		[Test]
+		public async Task CanValidateMake_UpdateMake_RequiredFielsAreMissing() {
+			MakeResource makeResource = new MakeResource {
+				Name = null
+			};
+
+			_controller.ModelState.AddModelError("Name", "Name field is required.");
+
+			IActionResult actual = await _controller.UpdateMakeAsync(It.IsAny<int>(), makeResource);
+
+			_makesRepository.Verify(db => db.GetAsync(It.IsAny<int>()), Times.Never);
+			var errors = ControllerTestHelper.GetBadRequestErrors(actual);
+			Assert.AreEqual(new[] { "Name field is required." }, errors["Name"]);
 		}
 	}
 }

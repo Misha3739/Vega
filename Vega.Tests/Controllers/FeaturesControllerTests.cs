@@ -38,7 +38,7 @@ namespace Vega.Tests.Controllers {
 		}
 
 		[Test]
-		public void CanGetMakes() {
+		public void CanGetFeatures() {
 			_featuresRepository.Setup(repo => repo.GetAllAsync()).ReturnsAsync(_features);
 
 			var makes = _controller.GetFeaturesAsync();

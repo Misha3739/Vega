@@ -54,9 +54,11 @@ export class EditMakeComponent implements OnInit, OnDestroy {
                       }));
                   }
               }
-          } else {
-            this.make = new Make(0,'',[]);
-        } 
+          }
+      }
+
+      if(!this.make) {
+        this.make = new Make(0,'',[]);
       }
       this.makeForm = new FormGroup({
           'name': new FormControl(this.make.name, [Validators.required]),

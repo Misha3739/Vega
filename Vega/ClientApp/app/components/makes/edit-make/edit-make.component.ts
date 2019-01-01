@@ -1,16 +1,18 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Subscription} from "rxjs";
 import {Make} from "../../../models/make";
 import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AnyService} from "../../../services/any.service";
 import {MakeService} from "../../../services/make.service";
+import {stringify} from "@angular/core/src/util";
 
 @Component({
   selector: 'app-edit-make',
   templateUrl: './edit-make.component.html',
   styleUrls: ['./edit-make.component.css']
 })
+
 export class EditMakeComponent implements OnInit, OnDestroy {
   private  id: number;
   private editMode = false;
@@ -91,17 +93,21 @@ export class EditMakeComponent implements OnInit, OnDestroy {
       if(this.editMode) {
           this.saveSubscription = this.makeService.updateMake(makeToSave, this.id).
               subscribe(result => {
-                  console.log(result);
-                this.router.navigate(['/makes/edit']);
+              this.redirectToParentComponent(result);
           });
       }
      else {
-          this.saveSubscription = this.saveSubscription = this.makeService.createMake(makeToSave).
+          this.saveSubscription = this.makeService.createMake(makeToSave).
             subscribe(result => {
-              console.log(result);
-              this.router.navigate(['/makes/edit']);
+              this.redirectToParentComponent(result);
           });
       }
+  }
+
+  redirectToParentComponent(result: any){
+      console.log(result);
+      this.anyService.reloadData('makes');
+      this.router.navigate(['/makes/edit']);
   }
 
   ngOnDestroy() {

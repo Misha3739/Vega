@@ -20,11 +20,11 @@ export class AnyService {
     return this.http.get(url)
         .map(res => res.json())
         .subscribe(result => {
-            let fetched = (this.fetchedData.filter(f => f.key == key))[0];
+            let fetched = (this.fetchedData.find(f => f.key == key));
             if(fetched) {
                 fetched.data = result;
             } else {
-                this.fetchedData.push(new FetchedData(key, result))
+                this.fetchedData.push(new FetchedData(key,url, result))
             }
             this.dataFetched.next(key);
         });
@@ -49,5 +49,17 @@ export class AnyService {
 
   deleteItem(url: string) {
     return this.http.delete(url);
+  }
+
+  reloadData(key: string) {
+      let fetched = (this.fetchedData.find(f => f.key == key));
+      if(fetched) {
+          this.http.get(fetched.url)
+              .map(res => res.json())
+              .subscribe(result => {
+                  fetched!.data = result;
+                  this.dataFetched.next(key);
+              });
+      }
   }
 }

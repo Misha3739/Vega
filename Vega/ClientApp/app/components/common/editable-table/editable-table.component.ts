@@ -22,7 +22,7 @@ export class EditableTableComponent implements OnInit, OnDestroy {
 
   private data : any[] = [];
 
-  private displayData: any[] = [];
+  private displayData: any[];
 
   loadDataSubscription: Subscription;
   deleteSubscription: Subscription;
@@ -42,6 +42,7 @@ export class EditableTableComponent implements OnInit, OnDestroy {
 
 
   private loadData() {
+    this.displayData = [];
     this.data = this.service.getData(this.sourceName) as any[];
     for(let i = 0;i<this.data.length; i++) {
       let dataItem = this.data[i];
@@ -69,7 +70,7 @@ export class EditableTableComponent implements OnInit, OnDestroy {
           console.log(result);
           this.data = [];
           this.displayData = [];
-          this.loadData();
+          this.service.getAny(this.fetchUrl,this.sourceName);
         },
         (err) => {
           alert("Error on deleting item with id" + id +" : "+err);

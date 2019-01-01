@@ -63,7 +63,17 @@ namespace vega.Controllers {
 			}
 
 			try {
-				 throw new NotImplementedException();
+				Make domainMake = await _repository.GetAsync(id);
+				if (domainMake == null) {
+					return BadRequest($"Make with id = {id} does not exist!");
+				}
+
+				_mapper.Map(make, domainMake);
+				domainMake.Id = id;
+				await _unitOfWork.CompeleteAsync();
+				Make found = await _repository.GetAsync(id);
+				MakeResource result = _mapper.Map<Make, MakeResource>(found);
+				return Ok(result);
 			} catch (Exception e) {
 				return StatusCode(500, e.InnerException?.Message ?? e.Message);
 			}

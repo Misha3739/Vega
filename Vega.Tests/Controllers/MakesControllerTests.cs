@@ -72,6 +72,8 @@ namespace Vega.Tests.Controllers {
 		public void TearDown() {
 			_makesRepository.Reset();
 			_controller.ModelState.Clear();
+			_unitOfWork.Reset();
+			_mapper.Reset();
 		}
 
 		[Test]
@@ -183,7 +185,7 @@ namespace Vega.Tests.Controllers {
 		}
 
 		[Test]
-		public async Task CanCreateMake_SaveThrowsException() {
+		public async Task CanCreateMake_DoesNotThrowException() {
 			_mapper.Setup(mapper => mapper.Map<MakeResource, Make>(_makeResource)).Returns(_savedMake);
 			_unitOfWork.Setup(db => db.CompeleteAsync()).Throws(new Exception("SQL Statement error"));
 
@@ -192,6 +194,48 @@ namespace Vega.Tests.Controllers {
 			_mapper.Verify(mapper => mapper.Map<MakeResource, Make>(_makeResource), Times.Once);
 			_makesRepository.Verify(db => db.CreateAsync(_savedMake), Times.Once);
 			_makesRepository.Verify(db => db.GetAsync(It.IsAny<int>()), Times.Never);
+			_mapper.Verify(mapper => mapper.Map<Make, MakeResource>(It.IsAny<Make>()), Times.Never);
+			Assert.AreEqual(500, (actual as ObjectResult)?.StatusCode);
+			Assert.AreEqual("SQL Statement error", (actual as ObjectResult)?.Value?.ToString());
+		}
+
+		[Test]
+		public async Task CanUpdateMake() {
+			const int id = 123;
+			_makesRepository.Setup(db => db.GetAsync(123)).Returns(Task.FromResult(_savedMake));
+
+			IActionResult actual = await _controller.UpdateMakeAsync(id, _makeResource);
+
+			_mapper.Verify(mapper => mapper.Map(_makeResource, _savedMake), Times.Once);
+			_makesRepository.Verify(db => db.CreateAsync(_savedMake), Times.Never);
+			_unitOfWork.Verify(db => db.CompeleteAsync(), Times.Once);
+			_makesRepository.Verify(db => db.GetAsync(id), Times.Exactly(2));
+			_mapper.Verify(mapper => mapper.Map<Make, MakeResource>(_savedMake), Times.Once);
+			Assert.IsInstanceOf<OkObjectResult>(actual);
+		}
+
+		[Test]
+		public async Task CanUpdateMake_DoesNotExist() {
+			const int id = 123;
+			_makesRepository.Setup(db => db.GetAsync(123)).Returns(Task.FromResult(default(Make)));
+
+			IActionResult actual = await _controller.UpdateMakeAsync(id, _makeResource);
+
+			_makesRepository.Verify(db => db.GetAsync(id), Times.Once);
+			var error = ControllerTestHelper.GetBadRequestError(actual);
+			Assert.AreEqual("Make with id = 123 does not exist!", error);
+		}
+
+		[Test]
+		public async Task CanUpdateMake_DoesNotThrowException() {
+			const int id = 123;
+			_makesRepository.Setup(db => db.GetAsync(123)).Returns(Task.FromResult(_savedMake));
+			_unitOfWork.Setup(db => db.CompeleteAsync()).Throws(new Exception("SQL Statement error"));
+
+			IActionResult actual = await _controller.UpdateMakeAsync(id,_makeResource);
+
+			_makesRepository.Verify(db => db.GetAsync(It.IsAny<int>()), Times.Once);
+			_mapper.Verify(mapper => mapper.Map(_makeResource, _savedMake), Times.Once);
 			_mapper.Verify(mapper => mapper.Map<Make, MakeResource>(It.IsAny<Make>()), Times.Never);
 			Assert.AreEqual(500, (actual as ObjectResult)?.StatusCode);
 			Assert.AreEqual("SQL Statement error", (actual as ObjectResult)?.Value?.ToString());

@@ -14,12 +14,12 @@ export class MakeService {
     }
 
     createMake(make: Make) {
-        return this.http.put('api/makes', make)
+        return this.http.post('api/makes', make)
             .map(res => res.json());
     }
 
     updateMake(make: Make, id: number) {
-        return this.http.post('api/makes/'+id, make)
+        return this.http.put('api/makes/'+id, make)
             .map(res => res.json());
     }
 }

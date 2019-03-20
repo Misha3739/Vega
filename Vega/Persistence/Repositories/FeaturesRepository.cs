@@ -13,24 +13,24 @@ namespace vega.Persistence.Repositories {
 			_dbContext = dbContext;
 		}
 
-		public Task<Feature> GetAsync(int id) {
-			throw new NotImplementedException();
+		public async Task<Feature> GetAsync(int id) {
+			return await _dbContext.Features.FindAsync(id);
 		}
 
 		public async Task<List<Feature>> GetAllAsync() {
 			return await _dbContext.Features.ToListAsync();
 		}
 
-		public Task<Feature> GetWithDependenciesAsync(int id) {
-			throw new NotImplementedException();
+		public async Task<Feature> GetWithDependenciesAsync(int id) {
+			return await GetAsync(id);
 		}
 
-		public Task CreateAsync(Feature value) {
-			throw new NotImplementedException();
+		public async Task CreateAsync(Feature value) {
+			await _dbContext.Features.AddAsync(value);
 		}
 
 		public void Delete(Feature value) {
-			throw new NotImplementedException();
+			_dbContext.Features.Remove(value);
 		}
 	}
 }

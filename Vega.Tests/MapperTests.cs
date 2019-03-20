@@ -145,6 +145,7 @@ namespace Vega.Tests {
 			var feature = new Feature() {
 				Id = 1,
 				Name = "Wheels 17",
+				Description = "This is the stale wheels with the radius at 17"
 			};
 
 			var actual = _mapper.Map<Feature, KeyValuePairResource>(feature);
@@ -152,6 +153,7 @@ namespace Vega.Tests {
 			Assert.IsNotNull(actual);
 			Assert.AreEqual(1, actual.Id);
 			Assert.AreEqual("Wheels 17", actual.Name);
+			Assert.AreEqual("This is the stale wheels with the radius at 17", actual.Description);
 		}
 
 		[Test]
@@ -159,10 +161,12 @@ namespace Vega.Tests {
 			var make = new Make() {
 				Id = 1,
 				Name = "Audi",
+				Description = "German car production concern",
 				Models = new List<Model> {
 					new Model {
 						Id = 1,
-						Name = "Q5"
+						Name = "Q5",
+						Description = "Middle-sized crossover"
 					},
 					new Model {
 						Id = 2,
@@ -176,11 +180,13 @@ namespace Vega.Tests {
 			Assert.IsNotNull(actual);
 			Assert.AreEqual(1, actual.Id);
 			Assert.AreEqual("Audi", actual.Name);
+			Assert.AreEqual("German car production concern", actual.Description);
 
 			Assert.IsNotNull(actual.Models);
 			Assert.AreEqual(2, actual.Models.Count);
 			CollectionAssert.AreEqual(new[] { 1, 2 }, actual.Models.Select(m => m.Id));
 			CollectionAssert.AreEqual(new[] { "Q5", "Q7" }, actual.Models.Select(m => m.Name));
+			CollectionAssert.AreEqual(new[] { "Middle-sized crossover", null }, actual.Models.Select(m => m.Description));
 		}
 	}
 }

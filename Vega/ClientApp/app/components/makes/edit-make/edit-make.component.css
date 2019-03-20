@@ -13,3 +13,12 @@
 .molels-header {
     margin-top: 20px;
 }
+
+.text-area {
+    max-width: 400px;
+}
+
+.btn-delete {
+    margin-top: 25px;
+    margin-left: 25px;
+}

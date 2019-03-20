@@ -52,7 +52,8 @@ export class EditMakeComponent implements OnInit, OnDestroy {
               if (this.make.models) {
                   for (let model of this.make.models) {
                       models.push(new FormGroup({
-                          'name': new FormControl(model.name, [Validators.required])
+                          'name': new FormControl(model.name, [Validators.required]),
+                          'description': new FormControl(model.description)
                       }));
                   }
               }
@@ -64,6 +65,7 @@ export class EditMakeComponent implements OnInit, OnDestroy {
       }
       this.makeForm = new FormGroup({
           'name': new FormControl(this.make.name, [Validators.required]),
+          'description': new FormControl(this.make.description),
           'models': models
       });
   }

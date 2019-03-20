@@ -14,6 +14,7 @@ namespace vega.Mapping {
 			CreateMap<KeyValuePairResource, Model>();
 			CreateMap<Model, KeyValuePairResource>();
 			CreateMap<Feature, KeyValuePairResource>();
+			CreateMap<FeatureResource, KeyValuePairResource>();
 			CreateMap<Vehicle, VehicleResource>()
 				.ForMember(vr => vr.Contact, opt => opt.MapFrom(v => new ContacResource {
 					Name = v.ContactName,

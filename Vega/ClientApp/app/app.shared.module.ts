@@ -16,6 +16,9 @@ import {EditableTableComponent} from "./components/common/editable-table/editabl
 import {AnyService} from "./services/any.service";
 import { EditMakeComponent } from "./components/makes/edit-make/edit-make.component";
 import {MakeService} from "./services/make.service";
+import {EditFeaturesComponent} from "./components/features/features-edit/edit-features.component";
+import {FeatureEditComponent} from "./components/features/feature-edit/feature-edit.component";
+import {FeatureService} from "./services/feture.service";
 
 @NgModule({
     declarations: [
@@ -27,6 +30,8 @@ import {MakeService} from "./services/make.service";
 		VehicleFormComponent,
 		EditMakesComponent,
         EditMakeComponent,
+        EditFeaturesComponent,
+        FeatureEditComponent,
         EditableTableComponent
     ],
     imports: [
@@ -44,13 +49,18 @@ import {MakeService} from "./services/make.service";
 			    { path: ':id', component: EditMakeComponent },
                 { path: 'new', component: EditMakeComponent }
                 ] },
+            { path: 'features/edit', component: EditFeaturesComponent, children: [
+                { path: ':id', component: FeatureEditComponent },
+                { path: 'new', component: FeatureEditComponent }
+                ] },
 			{ path: '**', redirectTo: 'home' },
         ])
     ],
     providers : [
         VehicleService,
         AnyService,
-        MakeService
+        MakeService,
+        FeatureService
     ]
 })
 export class AppModuleShared {

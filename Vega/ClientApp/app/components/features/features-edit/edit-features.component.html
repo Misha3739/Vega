@@ -1,0 +1,11 @@
+<h3> Features </h3>
+<app-editable-table
+        [sourceName]="['features']"
+        [fetchUrl]="['api/features']"
+        [newUrl]="['features/edit/new']"
+        [newLinkLabel]="['Create new Feature']"
+        [editUrlPattern]="['features/edit/']"
+        [deleteUrlPattern]="['api/feature/delete/']"
+        [columns]="[{name:'name', displayName:'Name'}]"
+        [tooltipProp]="['description']"></app-editable-table>
+<router-outlet></router-outlet>

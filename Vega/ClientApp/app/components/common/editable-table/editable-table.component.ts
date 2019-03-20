@@ -17,6 +17,7 @@ export class EditableTableComponent implements OnInit, OnDestroy {
   @Input() newLinkLabel:string
   @Input() deleteUrlPattern: string
   @Input() columns: ColumnItem[]
+  @Input() tooltipProp: string
   constructor(private service: AnyService) {
   }
 
@@ -54,6 +55,9 @@ export class EditableTableComponent implements OnInit, OnDestroy {
         if (dataItem.hasOwnProperty(column.name)) {
           displayItem[column.name] = dataItem[column.name];
         }
+        if(dataItem.hasOwnProperty(this.tooltipProp)) {
+          displayItem[this.tooltipProp] = dataItem[this.tooltipProp];
+        }
       }
 
       displayItem['editLink'] = this.editUrlPattern + dataItem['id'];
@@ -81,7 +85,7 @@ export class EditableTableComponent implements OnInit, OnDestroy {
   private getProperties(obj: any){
     let keys = [];
     for(let key in obj){
-      if(key != 'id')
+      if(key != 'id' && key != this.tooltipProp)
         keys.push(key);
     }
     return keys;

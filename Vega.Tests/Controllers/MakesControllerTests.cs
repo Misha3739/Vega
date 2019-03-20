@@ -22,7 +22,7 @@ namespace Vega.Tests.Controllers {
 
 		private List<Make> _makes;
 
-		private MakeResource _makeResource = new MakeResource {
+		private readonly MakeResource _makeResource = new MakeResource {
 			Name = "Audi",
 			Models = new List<KeyValuePairResource>() {
 				new KeyValuePairResource() {
@@ -31,7 +31,7 @@ namespace Vega.Tests.Controllers {
 			}
 		};
 
-		private Make _savedMake = new Make {
+		private readonly Make _savedMake = new Make {
 			Name = "Audi",
 			Models = new List<Model>() {
 				new Model() {

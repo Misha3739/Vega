@@ -1,4 +1,4 @@
 import { Model } from './model';
 export class Make {
-    constructor(public id : number,public name : string,public models : Model[]) { }
+    constructor(public id : number,public name : string,public models : Model[], public description?: string) { }
 }

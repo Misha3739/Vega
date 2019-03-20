@@ -8,7 +8,7 @@ using vega.Controllers.Resources;
 using vega.Models;
 
 namespace vega.Controllers {
-	public class MakesController : Controller {
+	public class MakesController : ControllerBase {
 		private readonly IMakesRepository _repository;
 		private readonly IMapper _mapper;
 		private readonly IUnitOfWork _unitOfWork;

@@ -9,7 +9,7 @@ using vega.Models;
 
 namespace vega.Controllers {
 	[Route("/api/vehicles")]
-	public class VehiclesController : Controller {
+	public class VehiclesController : ControllerBase {
 		private readonly IVehiclesRepository _vehiclesRepository;
 		private readonly IMapper _mapper;
 		private readonly IUnitOfWork _unitOfWork;

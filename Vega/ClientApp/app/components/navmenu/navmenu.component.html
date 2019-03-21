@@ -7,7 +7,19 @@
                 <span class='icon-bar'></span>
                 <span class='icon-bar'></span>
             </button>
-            <a class='navbar-brand' [routerLink]="['/home']">vega</a>
+            <div class="row">
+                <div class="col-xs-6">
+                    <a class='navbar-brand' [routerLink]="['/home']">Vega</a>
+                </div>
+                <div *ngIf="loggedIn" class="col-xs-6">
+                    <a class='navbar-brand-login'>{{email}}</a>
+                    <button class="btn btn-link btn-logout-link" (click)="logout()">Log out</button>
+                </div>
+                <div *ngIf="!loggedIn" class="col-xs-2 xs-offset-4">
+                     <a class='navbar-brand-login' [routerLink]="['/login']">Log in</a>
+                     <a class='navbar-brand-login' [routerLink]="['/register']">Sign up</a>
+                </div>
+            </div>
         </div>
         <div class='clearfix'></div>
         <div class='navbar-collapse collapse'>
@@ -22,13 +34,8 @@
                         <span class='glyphicon glyphicon-plus'></span> New Vehicle
                     </a>
                 </li>
-                <li [routerLinkActive]="['link-active']">
-                    <a [routerLink]="['/counter']">
-                        <span class='glyphicon glyphicon-education'></span> Counter
-                    </a>
-                </li>
-                <li>
-                    <a ><span class='glyphicon glyphicon-th-list'></span> Dictionaries</a>
+                <li *ngIf="loggedIn">
+                    <a><span class='glyphicon glyphicon-th-list'></span> Dictionaries</a>
                     <ul class="nav navbar-nav">
                         <li [routerLinkActive]="['link-active']">
                             <a [routerLink]="['/makes/edit']">

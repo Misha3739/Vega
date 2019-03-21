@@ -19,6 +19,9 @@ import {EditFeaturesComponent} from "./components/features/features-edit/edit-fe
 import {FeatureEditComponent} from "./components/features/feature-edit/feature-edit.component";
 import { FeatureService } from "./services/feture.service";
 import { HttpClientModule } from '@angular/common/http';
+import {LoginComponent} from "./components/login/login.component";
+import {LoginService} from "./services/login.service";
+import {AuthGuardService} from "./services/authguard.service";
 
 @NgModule({
     declarations: [
@@ -32,7 +35,8 @@ import { HttpClientModule } from '@angular/common/http';
         EditMakeComponent,
         EditFeaturesComponent,
         FeatureEditComponent,
-        EditableTableComponent
+        EditableTableComponent,
+        LoginComponent
     ],
     imports: [
         CommonModule,
@@ -41,18 +45,19 @@ import { HttpClientModule } from '@angular/common/http';
         ReactiveFormsModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
-            { path: 'vehicles/new', component: VehicleFormComponent },
+            { path: 'vehicles/new', component: VehicleFormComponent,canActivate: [AuthGuardService] },
             { path: 'home', component: HomeComponent },
             { path: 'counter', component: CounterComponent },
 			{ path: 'fetch-data', component: FetchDataComponent },
 			{ path: 'makes/edit', component: EditMakesComponent, children: [
 			    { path: ':id', component: EditMakeComponent },
                 { path: 'new', component: EditMakeComponent }
-                ] },
+                ], canActivate: [AuthGuardService]  },
             { path: 'features/edit', component: EditFeaturesComponent, children: [
                 { path: ':id', component: FeatureEditComponent },
                 { path: 'new', component: FeatureEditComponent }
-                ] },
+                ] ,canActivate: [AuthGuardService] },
+            { path: 'login', component: LoginComponent },
 			{ path: '**', redirectTo: 'home' },
         ])
     ],
@@ -61,6 +66,8 @@ import { HttpClientModule } from '@angular/common/http';
         AnyService,
         MakeService,
         FeatureService,
+        LoginService,
+        AuthGuardService
     ]
 })
 export class AppModuleShared {

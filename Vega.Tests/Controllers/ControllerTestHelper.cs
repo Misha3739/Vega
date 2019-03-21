@@ -24,5 +24,11 @@ namespace Vega.Tests.Controllers {
 			NotFoundObjectResult result = actual as NotFoundObjectResult;
 			return result.Value?.ToString();
 		}
+
+		public static string GetOkValue(IActionResult actual) {
+			Assert.IsInstanceOf<OkObjectResult>(actual);
+			OkObjectResult result = actual as OkObjectResult;
+			return result.Value.ToString();
+		}
 	}
 }

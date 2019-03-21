@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace vega.Models {
 	public class User {
@@ -24,5 +26,8 @@ namespace vega.Models {
 		public string EncryptedPassword { get; set; }
 
 		public Role Role { get; set; }
+
+		[NotMapped]
+		public string RoleName => Enum.GetName(typeof(Role), Role);
 	}
 }

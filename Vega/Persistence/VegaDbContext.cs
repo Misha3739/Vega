@@ -4,8 +4,10 @@ using vega.Utility;
 
 namespace vega.Persistence {
 	public class VegaDbContext : DbContext, IVegaDbContext {
-		public VegaDbContext(DbContextOptions<VegaDbContext> options)
+		private readonly IEncryption _encryption;
+		public VegaDbContext(DbContextOptions<VegaDbContext> options, IEncryption encryption)
 			: base(options) {
+			_encryption = encryption;
 		}
 
 		public DbSet<Make> Makes { get; set; }
@@ -20,7 +22,7 @@ namespace vega.Persistence {
 			User administrator = new User() {
 				Id = 1,
 				Email = "mihail.udot@gmail.com",
-				EncryptedPassword = EncryptionUtility.Encrypt("newPassw0rd!"),
+				EncryptedPassword = _encryption.Encrypt("newPassw0rd!"),
 				Role = Role.Administrator,
 				FirstName = "Mihail",
 				LastName = "Udot",

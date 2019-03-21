@@ -16,6 +16,7 @@ namespace vega {
 			WebHost.CreateDefaultBuilder(args)
 				.UseStartup<Startup>()
 				.UseKestrel(options => {
+					options.Listen(IPAddress.Loopback, 5000);
 					options.Listen(IPAddress.Loopback, 44360, listenOptions => {
 						var serverCertificate = LoadCertificate();
 						listenOptions.UseHttps(serverCertificate); // <- Configures SSL

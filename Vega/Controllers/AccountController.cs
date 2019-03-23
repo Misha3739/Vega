@@ -23,7 +23,9 @@ namespace vega.Controllers {
 			var user = await _accountRepository.FindUser(loginResource.Email);
 			if (user != null && user.EncryptedPassword == _encryption.Encrypt(loginResource.Password)) {
 				string token = _token.GenerateToken(user.Email, user.RoleName, user.Id);
-				return Ok(token);
+				return Ok(new LoginResult() {
+					Token = token
+				});
 			}
 
 			return Unauthorized();

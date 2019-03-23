@@ -4,6 +4,7 @@ import 'rxjs/add/operator/map';
 import {Login} from "../models/login";
 import {Subject} from 'rxjs';
 import {isPlatformBrowser} from '@angular/common';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable()
 export class LoginService {
@@ -14,21 +15,19 @@ export class LoginService {
 
     logged = new Subject<boolean>();
 
-    constructor(private http: Http, @Inject(PLATFORM_ID) private platformId: Object) {
+    constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {
     }
 
-    login(login: Login) : Promise<boolean> {
-        return this.http.post('api/account/login', login).toPromise().
-            then((response) => {
-                console.log(response);
-                this.setTokenAndEmail((<any>response)._body,login.email);
-                return true;
-            })
-            .catch(err => {
-                console.log(err);
-                this.setTokenAndEmail(null, null);
-                return false;
-            });
+    login(login: Login) {
+        return this.http.post<any>('api/account/login', login).toPromise().then((response) => {
+            console.log(response);
+            this.setTokenAndEmail(response.token, login.email);
+            return true;
+        }).catch(err => {
+            console.log(err);
+            this.setTokenAndEmail(null, null);
+            return false;
+        });
     }
 
     private isBrowser() : boolean {

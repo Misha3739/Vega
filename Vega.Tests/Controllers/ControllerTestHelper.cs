@@ -30,5 +30,12 @@ namespace Vega.Tests.Controllers {
 			OkObjectResult result = actual as OkObjectResult;
 			return result.Value.ToString();
 		}
+
+		public static T GetOkValue<T>(IActionResult actual) {
+			Assert.IsInstanceOf<OkObjectResult>(actual);
+			OkObjectResult result = actual as OkObjectResult;
+			Assert.IsInstanceOf(typeof(T), result.Value);
+			return (T) result.Value;
+		}
 	}
 }

@@ -58,7 +58,7 @@ namespace Vega.Tests.Controllers {
 			_encryption.Verify(enc => enc.Encrypt(credentials.Password), Times.Once);
 			_tokenUtility.Verify(util => util.GenerateToken(credentials.Email, "Administrator", userId), Times.Once);
 			Assert.IsInstanceOf<OkObjectResult>(actual);
-			Assert.AreEqual(token, ControllerTestHelper.GetOkValue(actual));
+			Assert.AreEqual(token, ControllerTestHelper.GetOkValue<LoginResult>(actual).Token);
 		}
 
 		[Test]

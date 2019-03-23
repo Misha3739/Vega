@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import {FetchedData} from "../models/common/fetched-data";
 import {Subject} from "rxjs";
+import {HttpClient} from '@angular/common/http';
 
 @Injectable()
 export class AnyService {
     static instance:AnyService;
 
-    constructor(private http: Http) {
+    constructor(private http: HttpClient) {
         return AnyService.instance = AnyService.instance || this;
     }
 
@@ -18,9 +18,8 @@ export class AnyService {
 
   getAny(url: string, key: string) {
     return this.http.get(url)
-        .map(res => res.json())
-        .subscribe(result => {
-            let fetched = (this.fetchedData.find(f => f.key == key));
+        .subscribe((result: any) => {
+            let fetched = this.fetchedData.find(f => f.key == key) as FetchedData;
             if(fetched) {
                 fetched.data = result;
             } else {
@@ -55,8 +54,7 @@ export class AnyService {
       let fetched = (this.fetchedData.find(f => f.key == key));
       if(fetched) {
           this.http.get(fetched.url)
-              .map(res => res.json())
-              .subscribe(result => {
+              .subscribe((result: any) => {
                   fetched!.data = result;
                   this.dataFetched.next(key);
               });

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './components/app/app.component';
@@ -18,7 +17,8 @@ import { EditMakeComponent } from "./components/makes/edit-make/edit-make.compon
 import {MakeService} from "./services/make.service";
 import {EditFeaturesComponent} from "./components/features/features-edit/edit-features.component";
 import {FeatureEditComponent} from "./components/features/feature-edit/feature-edit.component";
-import {FeatureService} from "./services/feture.service";
+import { FeatureService } from "./services/feture.service";
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
     declarations: [
@@ -36,7 +36,7 @@ import {FeatureService} from "./services/feture.service";
     ],
     imports: [
         CommonModule,
-        HttpModule,
+        HttpClientModule,
         FormsModule,
         ReactiveFormsModule,
         RouterModule.forRoot([
@@ -60,7 +60,7 @@ import {FeatureService} from "./services/feture.service";
         VehicleService,
         AnyService,
         MakeService,
-        FeatureService
+        FeatureService,
     ]
 })
 export class AppModuleShared {

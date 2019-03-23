@@ -1,11 +1,11 @@
 <h3> Makes </h3>
 <app-editable-table
-        [sourceName]="['makes']"
-        [fetchUrl]="['api/makes']"
-        [newUrl]="['makes/edit/new']"
-        [newLinkLabel]="['Create new Make']"
-        [editUrlPattern]="['makes/edit/']"
-        [deleteUrlPattern]="['api/make/delete/']"
+        [sourceName]="'makes'"
+        [fetchUrl]="'api/makes'"
+        [newUrl]="'makes/edit/new'"
+        [newLinkLabel]="'Create new Make'"
+        [editUrlPattern]="'makes/edit/'"
+        [deleteUrlPattern]="'api/make/delete/'"
         [columns]="[{name:'name', displayName:'Name'}]"
-        [tooltipProp]="['description']"></app-editable-table>
+        [tooltipProp]="'description'"></app-editable-table>
 <router-outlet></router-outlet>

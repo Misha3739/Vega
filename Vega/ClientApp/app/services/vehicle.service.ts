@@ -1,25 +1,24 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
+import {HttpClient} from '@angular/common/http';
+import {Feature} from "../models/feature";
+import {Make} from '../models/make';
 
 @Injectable()
 export class VehicleService {
 
-  constructor(private http: Http) { 
+  constructor(private http: HttpClient) {
   }
 
-  getFeatures() {
-    return this.http.get('/api/features')
-      .map(res => res.json());
+  getFeatures(){
+    return this.http.get<Array<Feature>>('/api/features');
   }
 
   getMakes() {
-    return this.http.get('/api/makes')
-      .map(res => res.json());
+    return this.http.get<Array<Make>>('/api/makes');
   }
 
   create(vehicle: any) {
-    return this.http.post('/api/vehicles', vehicle)
-    .map(res => res.json());
+    return this.http.post<any>('/api/vehicles', vehicle);
   }
 }

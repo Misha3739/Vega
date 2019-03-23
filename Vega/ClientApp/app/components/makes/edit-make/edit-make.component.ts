@@ -75,6 +75,7 @@ export class EditMakeComponent implements OnInit, OnDestroy {
       (<FormArray>this.makeForm.get('models')).push(
           new FormGroup({
               'name': new FormControl(null, [Validators.required]),
+              'description': new FormControl(null)
           }));
   }
 

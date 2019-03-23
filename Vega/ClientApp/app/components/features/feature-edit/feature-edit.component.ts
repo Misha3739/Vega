@@ -53,13 +53,13 @@ export class FeatureEditComponent implements OnInit {
 
   submit() {
     if(this.editMode) {
-      this.saveSubscription = this.featuresService.updateMake(this.feature, this.id).
+      this.saveSubscription = this.featuresService.updateFeature(this.feature, this.id).
       subscribe(result => {
         this.redirectToParentComponent(result);
       });
     }
     else {
-      this.saveSubscription = this.featuresService.createMake(this.feature).
+      this.saveSubscription = this.featuresService.createFeature(this.feature).
       subscribe(result => {
         this.redirectToParentComponent(result);
       });
